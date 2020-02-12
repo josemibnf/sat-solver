@@ -64,7 +64,7 @@ class Interpretation():
 		"""Get the best neighbors (ties broken by picking first best solution)"""
 		nbs = self.get_neighbors()
 		best_nb = None
-		best_cost = self.cost
+		best_cost = self.cost()
 		for inb, nb in enumerate(nbs):
 			if nb.cost() < best_cost:
 				best_nb = inb

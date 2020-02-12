@@ -132,6 +132,9 @@ class Solver():
 		max_tries: Maximum number of tries to solve the problem
 		"""
 		curr_sol = Interpretation(self.problem) # Random initial interpretation
+		if curr_sol.cost() < self.best_cost: # If it improves the best solution found so far
+			self.best_sol = curr_sol.copy() # Save it as best solution
+			self.best_cost = curr_sol.cost() # and its cost
 		for i in range(max_tries): # Try to find a solution max_tries times
 			curr_sol = curr_sol.get_neighbor() # Get a new interpretation
 			if curr_sol.cost() < self.best_cost: # If it improves the best solution found so far

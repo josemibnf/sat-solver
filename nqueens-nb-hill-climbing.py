@@ -64,12 +64,15 @@ class Interpretation():
 		"""Get the best neighbors (ties broken by picking first best solution)"""
 		nbs = self.get_neighbors()
 		best_nb = None
-		best_cost = self.num_vars
+		best_cost = self.cost
 		for inb, nb in enumerate(nbs):
 			if nb.cost() < best_cost:
 				best_nb = inb
 				best_cost = nb.cost()
-		return nbs[best_nb]
+		if best_nb == None:
+			return self
+		else:
+			return nbs[best_nb]
 
 	def cost(self):
 		"""Compute the cost for the interpretation"""
@@ -132,6 +135,9 @@ class Solver():
 		max_tries: Maximum number of tries to solve the problem
 		"""
 		curr_sol = Interpretation(self.problem) # Random initial interpretation
+		if curr_sol.cost() < self.best_cost: # If it improves the best solution found so far
+			self.best_sol = curr_sol.copy() # Save it as best solution
+			self.best_cost = curr_sol.cost() # and its cost
 		for i in range(max_tries): # Try to find a solution max_tries times
 			curr_sol = curr_sol.get_neighbor() # Get a new interpretation
 			if curr_sol.cost() < self.best_cost: # If it improves the best solution found so far

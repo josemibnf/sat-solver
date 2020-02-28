@@ -14,7 +14,7 @@ do
     do
         let "iter++"
 
-        python3 rnd-cnf-gen.py 50 $clauses 3 $i  | ./minisat >> experiment/$clauses.txt
+        python3 rnd-cnf-gen.py 50 $clauses 3 $i  | ./$1 >> experiment/$clauses.txt
     done
     rm cnf.cnf
 done

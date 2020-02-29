@@ -10,20 +10,14 @@ def flipped(interpretation):
     pass
 
 def getFormula(cnf):
-    if cnf.readline is not "c Random CNF formula":
-        print ("Error: NO ES UN CNF.")
-        exit
-    second_line = cnf.readline()
-    num_clauses = second_line.split()[2] 
-    print(num_clauses)
-    num_var = second_line.split()[3]
     formula=[]
-    for i in range(2, num_clauses):
-        line=cnf.readline()
-        clause=[]
-        for var in line.split():
-            clause.append(int(var))
-        formula.append(clause)
+    for line in cnf:
+        if line.split()[0] is not "c" and line.split()[0] is not "p":
+            clause=[]
+            for var in line.split():
+                if int(var) != 0:
+                    clause.append(int(var))
+            formula.append(clause)
     return formula
     
 
@@ -34,6 +28,7 @@ if __name__ == "__main__":
         for j in 1, max_flips:
             if satisfies(interpretation, formula):
                 print(interpretation)
+                break
             else:
                 flipped(interpretation)
     print("No solution found")

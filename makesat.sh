@@ -16,5 +16,4 @@ do
 
         python3 rnd-cnf-gen.py 50 $clauses 3 $i  | ./$1 >> experiment/$clauses.txt
     done
-    rm cnf.cnf
 done

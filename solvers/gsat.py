@@ -2,8 +2,9 @@
 import sys
 import random
 
-def satisfies(interpretation, formula):
+#  1->True  0->False
 
+def satisfies(interpretation, formula):
     def isTrue(var):
         if ( interpretation[abs(var)-1]==0 and var<0 ) or ( interpretation[abs(var)-1]==1 and var>0 ) :
             return False
@@ -59,14 +60,12 @@ if __name__ == "__main__":
     max_flips = 20
 
     formula = getFormula(open(sys.argv[1], "r"))
-    print(num_vars)
-    print(formula)
     for i in 1, max_tries:
         interpretation=getRandomInterpretation(formula)
         for j in 1, max_flips:
             if satisfies(interpretation, formula):
-                print("Satisfactible")
+                print("SATISFIABLE")
                 exit()
             else:
                 interpretation = flipped(interpretation)
-    print("Insatisfactible")
+    print("UNSATISFIABLE")

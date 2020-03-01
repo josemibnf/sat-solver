@@ -5,7 +5,7 @@ import random
 def satisfies(interpretation, formula):
 
     def isTrue(var):
-        if ( interpretation[(var*-1)-1]==0 and var<0 ) or ( interpretation[(var*-1)-1]==1 and var>0 ) :
+        if ( interpretation[abs(var)-1]==0 and var<0 ) or ( interpretation[abs(var)-1]==1 and var>0 ) :
             return False
         else:
             return True
@@ -23,8 +23,8 @@ def satisfies(interpretation, formula):
 def getRandomInterpretation(formula):
     global num_vars
     interpretation=[]
-    for var in range (1, num_vars):
-        interpretation.append(random.randrange(0,1))
+    for var in range (0, num_vars):
+        interpretation.append(random.randrange(0,2))
     print("Su nueva interpretacion es: ", interpretation)
     return interpretation
 
@@ -43,7 +43,7 @@ def getFormula(cnf):
     for line in cnf:
         if line.split()[0] is not "c":
             if line.split()[0] is "p":
-                num_vars = line.split()[2]
+                num_vars = int(line.split()[2])
             else:
                 clause=[]
                 for var in line.split():
@@ -61,7 +61,6 @@ if __name__ == "__main__":
     formula = getFormula(open(sys.argv[1], "r"))
     print(num_vars)
     print(formula)
-    exit()
     for i in 1, max_tries:
         interpretation=getRandomInterpretation(formula)
         for j in 1, max_flips:

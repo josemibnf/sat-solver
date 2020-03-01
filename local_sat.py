@@ -17,8 +17,6 @@ def isSat(solver):
         exit()
         return False
 
-    
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--maker", "-m", help="do new experiment", default=False, action='store')

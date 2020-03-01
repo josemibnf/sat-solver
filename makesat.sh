@@ -1,5 +1,4 @@
 #!/bin/bash
-let "vars = 100"
 let "clauses = 200"
 rm -r experiment
 mkdir experiment
@@ -9,11 +8,9 @@ do
     echo "Clausula $clauses."
     echo "------------------------------\n"
     let "clauses++"
-    let "iter = 0"
     for i in {0..49}
     do
-        let "iter++"
-
-        python3 rnd-cnf-gen.py 50 $clauses 3 $i  | ./$1 >> experiment/$clauses.txt
+        python3 rnd-cnf-gen.py 50 $clauses 3 $i > experiment/cnf.cnf
+        ./$1 experiment/cnf.cnf >> experiment/$clauses.txt
     done
 done

@@ -26,7 +26,6 @@ def getRandomInterpretation(formula):
     interpretation=[]
     for var in range (0, num_vars):
         interpretation.append(random.randrange(0,2))
-    print("Su nueva interpretacion es: ", interpretation)
     return interpretation
 
 def flipped(interpretation):
@@ -35,7 +34,6 @@ def flipped(interpretation):
         interpretation[flip_var]=1
     else:
         interpretation[flip_var]=0
-    print("Ahora es: ", interpretation)
     return interpretation
 
 def getFormula(cnf):
@@ -56,8 +54,8 @@ def getFormula(cnf):
 
 if __name__ == "__main__":
     global num_vars
-    max_tries = 20
-    max_flips = 20
+    max_tries = 2000
+    max_flips = 2000
 
     formula = getFormula(open(sys.argv[1], "r"))
     for i in 1, max_tries:

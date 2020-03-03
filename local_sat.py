@@ -27,16 +27,16 @@ if __name__ == "__main__":
     parser.add_argument("--config", "-c", help="change configuration", default=False, action='store', nargs='*')
     parser.add_argument("--experiment","-e", help="experiment directory", default=False, action='store')
     args = parser.parse_args()
-    configuracion=[20, 80, 5, 5] #default.
-    experiment='experiment' #default
+    configuracion=[200, 800, 50, 3, 50] #primera clausula, ultima clausula, numero de variables, variables/clausula, numero de iteraciones.
+    experiment='experiment' #by default
     if args.config is not False and validConfig(args.config):
-        configuracion = list(args.config)
+        configuracion = args.config
     if args.experiment is not False:
         experiment = args.experiment
     if args.maker is not False:
         solver = 'solvers/'+args.maker
         isSat(solver)
-        subprocess.check_call(['./makesat.sh', solver, str(configuracion[0]), str(configuracion[1]), str(configuracion[2]), str(configuracion[3]), experiment])
+        subprocess.check_call(['./makesat.sh', solver, str(configuracion[0]), str(configuracion[1]), str(configuracion[2]), str(configuracion[3]), str(configuracion[4]),experiment])
         subprocess.check_call(['./makeplot.sh', str(configuracion[0]), str(configuracion[1]), experiment])
     elif os.path.isdir(experiment) == False  or  os.path.isfile(experiment+'/res.txt') == False :
         print("Error: EXPERIMENTO INCOMPLETO, HAZ --maker")

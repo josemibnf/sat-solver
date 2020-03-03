@@ -58,9 +58,9 @@ if __name__ == "__main__":
     max_flips = 2000
 
     formula = getFormula(open(sys.argv[1], "r"))
-    for i in 1, max_tries:
+    for i in range(1, max_tries):
         interpretation=getRandomInterpretation(formula)
-        for j in 1, max_flips:
+        for j in range(1, max_flips):
             if satisfies(interpretation, formula):
                 print("SATISFIABLE")
                 exit()

@@ -1,9 +1,11 @@
 #!/bin/bash
+# $1 primera clausula, $2 segunda clausula
 cd experiment
-for clauses in {200..800}
+clauses=$1
+while [ "$clauses" -le "$2" ]
 do
     echo "Clausula $clauses."
     let "clauses++"
-    let "iter = 0"
     grep -c ^SATISFIABLE $clauses.txt >> res.txt
 done
+exit 0

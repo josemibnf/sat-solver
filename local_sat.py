@@ -21,6 +21,12 @@ def isSat(solver):
 def validConfig(config):
     return True
 
+def beIgnored(experiment):
+    ignore = open(".gitignore", "a")
+    ignore.write("\n"+experiment+"/")
+    ignore.close()
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--maker", "-m", help="do new experiment", default=False, action='store')
@@ -33,6 +39,7 @@ if __name__ == "__main__":
         configuracion = args.config
     if args.experiment is not False:
         experiment = args.experiment
+        beIgnored(experiment)
     if args.maker is not False:
         solver = 'solvers/'+args.maker
         isSat(solver)

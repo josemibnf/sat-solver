@@ -18,18 +18,21 @@ def isSat(solver):
         exit()
         return False
 
+def validConfig(config):
+    return True
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--maker", "-m", help="do new experiment", default=False, action='store')
-    parser.add_argument("--config", "-c", help="change configuration, en formato [,,,]", default=False, action='store')
+    parser.add_argument("--config", "-c", help="change configuration", default=False, action='store', nargs='*')
     args = parser.parse_args()
-    configuracion=[20, 80, 5, 5] #primera clausula, ultima clausula, numero de variables, numero de iteraciones.
-    if args.config is not False:
-            configuracion = args.config
+    configuracion=[20, 80, 5, 5] #default.
+    if args.config is not False and validConfig(args.config):
+        configuracion = list(args.config)
     if args.maker is not False:
         solver = 'solvers/'+args.maker
         isSat(solver)
-        #subprocess.check_call(['./makesat.sh', solver, str(configuracion[0]), str(configuracion[1]), str(configuracion[2]), str(configuracion[3])])
+        subprocess.check_call(['./makesat.sh', solver, str(configuracion[0]), str(configuracion[1]), str(configuracion[2]), str(configuracion[3])])
         subprocess.check_call(['./makeplot.sh', str(configuracion[0]), str(configuracion[1])])
     elif os.path.isdir('experiment') == False  or  os.path.isfile('experiment/res.txt') == False :
         print("Error: EXPERIMENTO INCOMPLETO, HAZ --maker")

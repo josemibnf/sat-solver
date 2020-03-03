@@ -5,9 +5,9 @@ mkdir experiment
 clauses=$2
 while [ "$clauses" -le "$3" ]
 do
-    echo "\n\n\n------------------------------"
+    echo "------------------------------"
     echo "Clausula $clauses."
-    echo "------------------------------\n"
+    echo "------------------------------"
     let "clauses++"
     i=0
     while [ "$i" -le "$5" ]

@@ -1,7 +1,7 @@
 #!/bin/bash
 #$1 solver, $2 primera clausula, $3 ultima clausula, $4 numero de variables, $5 numero de iteraciones
-rm -r experiment
-mkdir experiment
+rm -r $6
+mkdir $6
 clauses=$2
 while [ "$clauses" -le "$3" ]
 do
@@ -12,8 +12,8 @@ do
     i=0
     while [ "$i" -le "$5" ]
     do
-        python3 rnd-cnf-gen.py $4 $clauses 3 $i > experiment/cnf.cnf
-        ./$1 experiment/cnf.cnf >> experiment/$clauses.txt
+        python3 rnd-cnf-gen.py $4 $clauses 3 $i > $6/cnf.cnf
+        ./$1 $6/cnf.cnf >> $6/$clauses.txt
         let "i++"
     done
 done

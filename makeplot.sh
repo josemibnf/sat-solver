@@ -1,6 +1,6 @@
 #!/bin/bash
 # $1 primera clausula, $2 segunda clausula
-cd experiment
+cd $3
 clauses=$1
 while [ "$clauses" -le "$2" ]
 do

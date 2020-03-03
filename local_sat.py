@@ -19,7 +19,10 @@ def isSat(solver):
         return False
 
 def validConfig(config):
-    return True
+    if config[0]<config[1] and config[2]>=config[3]:
+        return True
+    else:
+        return False
 
 def beIgnored(experiment):
     ignore = open(".gitignore", "a")

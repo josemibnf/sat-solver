@@ -56,7 +56,7 @@ if __name__ == "__main__":
     max_flips = 2000
     global num_vars
 
-    formula = sl.getFormula(open(sys.argv[1], "r"))
+    formula = getFormula(open(sys.argv[1], "r"))
     for i in range(1, max_tries):
         interpretation=getRandomInterpretation(formula)
         for j in range(1, max_flips):

@@ -13,7 +13,7 @@ do
     while [ "$i" -le "$6" ]
     do
         python3 rnd-cnf-gen.py $4 $clauses $5 $i > $7/cnf.cnf
-        ./$1 $7/cnf.cnf >> $7/$clauses.txt
+        ./$1 $7/cnf.cnf | grep "SATISFIABLE" >> $7/$clauses.txt
         let "i++"
     done
 done

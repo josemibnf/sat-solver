@@ -2,11 +2,9 @@
 import sys
 import random
 
-#  1->True  0->False
-
 def satisfies(interpretation, formula):
     def isTrue(var):
-        if ( interpretation[abs(var)-1]==0 and var<0 ) or ( interpretation[abs(var)-1]==1 and var>0 ) :
+        if ( interpretation[abs(var)-1]>0 and var<0 ) or ( interpretation[abs(var)-1]<0 and var>0 ) :
             return False
         else:
             return True
@@ -21,19 +19,19 @@ def satisfies(interpretation, formula):
             return False
     return True
 
-def getRandomInterpretation(formula):
+def getRandomInterpretation():
     global num_vars 
     interpretation=[]
-    for var in range (0, num_vars):
-        interpretation.append(random.randrange(0,2))
+    for var in range (1, num_vars+1):
+        new_var=0
+        while new_var == 0:
+            new_var=random.randrange(-1,2)*var
+        interpretation.append(new_var)
     return interpretation
 
-def flipped(interpretation):
-    flip_var = random.randrange(0,len(formula[0])-1)
-    if interpretation[flip_var]==0:
-        interpretation[flip_var]=1
-    else:
-        interpretation[flip_var]=0
+def flipped(interpretation, vars_clause):
+    flip_var = random.randrange(0,vars_clause)
+    interpretation[flip_var]*=-1
     return interpretation
 
 def getFormula(cnf):
@@ -58,13 +56,14 @@ if __name__ == "__main__":
 
     formula = getFormula(open(sys.argv[1], "r"))
     for i in range(1, max_tries):
-        interpretation=getRandomInterpretation(formula)
+        interpretation=getRandomInterpretation()
         for j in range(1, max_flips):
             if satisfies(interpretation, formula):
-                print("c jsat")                
+                print("c jsat")
                 print("s SATISFIABLE")
                 print("v "+" ".join(map(str, interpretation)))
                 exit()
             else:
-                interpretation = flipped(interpretation)
-    print("UNSATISFIABLE")
+                interpretation = flipped(interpretation, len(formula[0]))
+    print("c fsat")
+    print("s UNSATISFIABLE")

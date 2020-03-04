@@ -61,7 +61,7 @@ if __name__ == "__main__":
             if satisfies(interpretation, formula):
                 print("c gsat")
                 print("s SATISFIABLE")
-                print("v ",interpretation)
+                print("v "+" ".join(map(str, interpretation)))
                 exit()
             else:
                 interpretation = flipped(interpretation, len(formula[0]))

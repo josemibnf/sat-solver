@@ -58,13 +58,11 @@ if __name__ == "__main__":
 
     formula = sl.getFormula(open(sys.argv[1], "r"))
     for i in range(1, max_tries):
-        interpretation=sl.getRandomInterpretation(formula)
+        interpretation=getRandomInterpretation(formula)
         for j in range(1, max_flips):
-            if sl.satisfies(interpretation, formula):
+            if satisfies(interpretation, formula):
                 print("SATISFIABLE")
                 exit()
             else:
-                interpretation = sl.flipped(interpretation)
+                interpretation = flipped(interpretation)
     print("UNSATISFIABLE")
-
-#test

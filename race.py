@@ -7,6 +7,7 @@ import os
 import glob
 import re
 import stat
+import subprocess
 
 out_file = "out.txt" # Solver output
 limits_file = "tmp-limits.sh" # Limits script file
@@ -115,7 +116,8 @@ if __name__ == '__main__' :
         sys.stdout.write("File %s... " % os.path.basename(bf))
         sys.stdout.flush()
         # Run the solver under limits
-        os.system("(time -p ./%s %s %s) &> %s" % (limits_file, solver, bf, out_file))
+        with open(out_file, 'w') as output:
+            subprocess.run(['time', '-p', './%s' % limits_file, solver, bf], stdout = output, stderr = subprocess.STDOUT)
         #Check result
         correct = check_correctness(bf, out_file)
         if correct == True: # The solution is correct

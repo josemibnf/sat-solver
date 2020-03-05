@@ -74,5 +74,7 @@ if __name__ == "__main__":
                     print("s SATISFIABLE")
                     print("v "+" ".join(map(str, flip_interpretation)))
                     exit()
+            else:
+                sal++
     print("c gsat-hill-cimbing")
     print("s UNSATISFIABLE")

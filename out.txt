@@ -1,4 +1,6 @@
 Traceback (most recent call last):
   File "/mnt/c/Users/jse/Desktop/local-search/solvers/gsat-hill-climbing.py", line 68, in <module>
     flip_cost = cost(flip_interpretation, formula)
+  File "/mnt/c/Users/jse/Desktop/local-search/solvers/gsat-hill-climbing.py", line 16, in cost
+    if isTrue(var)==True:
 KeyboardInterrupt

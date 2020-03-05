@@ -51,8 +51,8 @@ def getFormula(cnf):
     return formula
 
 if __name__ == "__main__":
-    max_tries = 2000
-    max_flips = 2000
+    max_tries = 20000
+    max_flips = 20000
     global num_vars
 
     formula = getFormula(open(sys.argv[1], "r"))

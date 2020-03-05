@@ -29,8 +29,9 @@ def getRandomInterpretation():
         interpretation.append(new_var)
     return interpretation
 
-def flipped(interpretation, vars_clause):
-    flip_var = random.randrange(0,vars_clause)
+def flipped(interpretation):
+    global num_vars
+    flip_var = random.randrange(0, num_vars)
     interpretation[flip_var]*=-1
     return interpretation
 
@@ -64,6 +65,6 @@ if __name__ == "__main__":
                 print("v "+" ".join(map(str, interpretation)))
                 exit()
             else:
-                interpretation = flipped(interpretation, len(formula[0]))
+                interpretation = flipped(interpretation)
     print("c fsat")
     print("s UNSATISFIABLE")

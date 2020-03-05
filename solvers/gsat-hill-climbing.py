@@ -13,8 +13,8 @@ def cost(interpretation, formula):
     for clausula in formula:
         clausula_bool=False
         for var in clausula:
-            if isTrue(var):
-                --cost
+            if isTrue(var)==True:
+                cost=cost-1
                 break
     return cost
 
@@ -28,8 +28,9 @@ def getRandomInterpretation():
         interpretation.append(new_var)
     return interpretation
 
-def flipped(interpretation, vars_clause):
-    flip_var = random.randrange(0,vars_clause)
+def flipped(interpretation):
+    global num_vars
+    flip_var = random.randrange(0, num_vars)
     interpretation[flip_var]*=-1
     return interpretation
 
@@ -58,20 +59,20 @@ if __name__ == "__main__":
         interpretation=getRandomInterpretation()
         cost_interpretation = cost(interpretation, formula)
         if cost_interpretation == 0:
-            print("c gsat")
+            print("c gsat-hill-climbing")
             print("s SATISFIABLE")
             print("v "+" ".join(map(str, interpretation)))
             exit()
         for j in range(1, max_flips):
-            flip_interpretation = flipped(interpretation, len(formula[0]))
+            flip_interpretation = flipped(interpretation)
             flip_cost = cost(flip_interpretation, formula)
             if flip_cost <= cost_interpretation:
                 interpretation = flip_interpretation
                 cost_interpretation = flip_cost
                 if cost_interpretation == 0:
-                    print("c gsat")
+                    print("c gsat-hill-climbing")
                     print("s SATISFIABLE")
                     print("v "+" ".join(map(str, flip_interpretation)))
                     exit()
-    print("c fsat")
+    print("c gsat-hill-cimbing")
     print("s UNSATISFIABLE")

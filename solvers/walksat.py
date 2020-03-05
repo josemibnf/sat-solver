@@ -49,11 +49,15 @@ def getFormula(cnf):
                 formula.append(clause)
     return formula
 
+def break(variable, interpretation):
+        pass
+
 if __name__ == "__main__":
     max_tries = 2000
     max_flips = 2000
+    probability = 0.5
     global num_vars
-
+	
     formula = getFormula(open(sys.argv[1], "r"))
     for i in range(1, max_tries):
         interpretation=getRandomInterpretation()
@@ -64,6 +68,11 @@ if __name__ == "__main__":
                 print("v "+" ".join(map(str, interpretation)))
                 exit()
             else:
-                interpretation = flipped(interpretation, len(formula[0]))
+                breakcount = min(break(variable, interpretation) for variable in interpretation)
+                
+                if(breakcount < probability):
+                        
+                
+                        
     print("c walksat")
     print("s UNSATISFIABLE")

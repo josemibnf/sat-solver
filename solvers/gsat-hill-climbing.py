@@ -63,22 +63,16 @@ if __name__ == "__main__":
             print("s SATISFIABLE")
             print("v "+" ".join(map(str, interpretation)))
             exit()
-        stoped=0    #Si leva con la misma interpretacion varios flips sale al random.
         for j in range(1, max_flips):
             flip_interpretation = flipped(interpretation)
             flip_cost = cost(flip_interpretation, formula)
             if flip_cost < cost_interpretation:
                 interpretation = flip_interpretation
                 cost_interpretation = flip_cost
-                stoped=0
                 if cost_interpretation == 0:
                     print("c gsat-hill-climbing")
                     print("s SATISFIABLE")
                     print("v "+" ".join(map(str, flip_interpretation)))
                     exit()
-            else:
-                stoped=stoped+1
-                if stoped==num_vars:
-                    break
     print("c gsat-hill-cimbing")
     print("s UNSATISFIABLE")

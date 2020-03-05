@@ -59,11 +59,11 @@ if __name__ == "__main__":
         interpretation=getRandomInterpretation()
         for j in range(1, max_flips):
             if satisfies(interpretation, formula):
-                print("c jsat")
+                print("c walksat")
                 print("s SATISFIABLE")
                 print("v "+" ".join(map(str, interpretation)))
                 exit()
             else:
                 interpretation = flipped(interpretation, len(formula[0]))
-    print("c fsat")
+    print("c walksat")
     print("s UNSATISFIABLE")

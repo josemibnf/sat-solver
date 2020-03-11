@@ -113,6 +113,6 @@ if __name__ == '__main__':
 
     solution = run_sat(clauses, n_vars, lit_clause)
 
-    print 'c RobinHood'
+    print 'c walksat-robado'
     print 's SATISFIABLE'
     print 'v ' + ' '.join(map(str, solution[1:]))

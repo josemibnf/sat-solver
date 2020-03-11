@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/mnt/c/Users/jse/Desktop/local-search/solvers/coronavirus.py", line 72, in <module>
-    flip_cost = cost(flip_interpretation)
-  File "/mnt/c/Users/jse/Desktop/local-search/solvers/coronavirus.py", line 17, in cost
-    if isTrue(var)==True:
-  File "/mnt/c/Users/jse/Desktop/local-search/solvers/coronavirus.py", line 8, in isTrue
-    if ( interpretation[abs(var)-1]>0 and var<0 ) or ( interpretation[abs(var)-1]<0 and var>0 ) :
-KeyboardInterrupt

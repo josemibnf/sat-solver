@@ -49,30 +49,46 @@ def getFormula(cnf):
                 formula.append(clause)
     return formula
 
-def break(variable, interpretation):
-        pass
+def broken(interpretation, formula):
+    print("interpretation and formula: ",interpretation, formula)
+    breakcost = 0
+    breakcost_actual = 0
+    return_variable = None
+
+    # Get a random variable
+    variable = interpretation[random.randrange(0, len(interpretation)+1)]
+    switch_variable = -1 * variable
+
+    for clause in formula:
+        if switch_variable in clause:
+            breakcost_actual += 1
+
+    return -1 * return_variable
 
 if __name__ == "__main__":
-    max_tries = 2000
-    max_flips = 2000
-    probability = 0.5
+    max_tries = 20000
+    max_flips = 20000
+
     global num_vars
 	
     formula = getFormula(open(sys.argv[1], "r"))
-    for i in range(1, max_tries):
+    for i in range(1, max_tries+1):
+        print("\nTrie: ",i)
         interpretation=getRandomInterpretation()
-        for j in range(1, max_flips):
+        for j in range(1, max_flips+1):
+            print("\nFlip: ",j)
             if satisfies(interpretation, formula):
                 print("c walksat")
                 print("s SATISFIABLE")
                 print("v "+" ".join(map(str, interpretation)))
                 exit()
             else:
-                breakcount = min(break(variable, interpretation) for variable in interpretation)
-                
-                if(breakcount < probability):
-                        
-                
-                        
+                switch_variable = broken(interpretation, formula)
+                print("Variable to change = ",switch_variable)
+
+                index = interpretation.index(switch_variable)
+                interpretation[index] = switch_variable * -1
+               
+
     print("c walksat")
     print("s UNSATISFIABLE")

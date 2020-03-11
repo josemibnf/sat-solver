@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/mnt/c/Users/jse/Desktop/local-search/solvers/gsat.py", line 62, in <module>
+    if satisfies(interpretation, formula):
+  File "/mnt/c/Users/jse/Desktop/local-search/solvers/gsat.py", line 15, in satisfies
+    if isTrue(var):
+  File "/mnt/c/Users/jse/Desktop/local-search/solvers/gsat.py", line 6, in isTrue
+    def isTrue(var):
+KeyboardInterrupt

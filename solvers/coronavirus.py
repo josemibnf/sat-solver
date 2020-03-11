@@ -31,13 +31,9 @@ def getRandomInterpretation():
 
 def flipped(interpretation):
     global num_vars
-    global aux
-    for i in range(0, num_vars):
-        if aux[i]<0:
-            interpretation[i]*=-1 #Si aun no lo hemos hecho, haz flip a esa variable.
-            aux[i]=abs(aux[i])    #En aux decimos que ya hemos hecho flip a esa variable.
-            return interpretation
-    return -1                     #Ya hemos hecho flip en todas las interpretaciones.
+    flip_var = random.randrange(0, num_vars)
+    interpretation[flip_var]*=-1
+    return interpretation
 
 def getFormula(cnf):
     global num_vars
@@ -55,16 +51,12 @@ def getFormula(cnf):
     return formula
 
 if __name__ == "__main__":
-    max_tries = 20000000
-    max_flips = 20000000
+    max_tries = 20000
+    max_flips = 20000
     global num_vars
-    global aux
     global formula
 
     formula = getFormula(open(sys.argv[1], "r"))
-    aux=[]
-    for i in range(1, num_vars+1):
-        aux.append(-i)
     for i in range(1, max_tries):
         interpretation=getRandomInterpretation()
         cost_interpretation = cost(interpretation)
@@ -75,10 +67,6 @@ if __name__ == "__main__":
             exit()
         for j in range(1, max_flips):
             flip_interpretation = flipped(interpretation)
-            if flip_interpretation == -1:
-                for i in range(0, num_vars):
-                    aux[i]=-1*aux[i]
-                break
             flip_cost = cost(flip_interpretation)
             if flip_cost < cost_interpretation:
                 interpretation = flip_interpretation

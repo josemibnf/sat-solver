@@ -108,15 +108,11 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
             interpretation[abs(lit_to_flip)] *= -1
 
 
-def main():
-
+if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])
 
     solution = run_sat(clauses, n_vars, lit_clause)
 
+    print 'c RobinHood'
     print 's SATISFIABLE'
-    print 'v ' + ' '.join(map(str, solution[1:])) + ' 0'
-
-
-if __name__ == '__main__':
-    main()
+    print 'v ' + ' '.join(map(str, solution[1:]))

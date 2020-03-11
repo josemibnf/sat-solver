@@ -35,8 +35,7 @@ def random_population(nk):
         pop.append(getRandomInterpretation())
     return pop
 
-def best_individual(pop):
-    best=[None, 99999999999]
+def best_individual(pop, best):
     for i in pop:
         costi=cost(i)
         if costi == 0:
@@ -45,22 +44,25 @@ def best_individual(pop):
             print("v "+" ".join(map(str, i)))
             exit()
         if costi<best[1]:
+            print(costi, " < ", best[1])
             best[0]=i
             best[1]=costi
-    return best[0]
+    print("La mejor interpretacion de momento es: ", best[0], " y tiene coste ",best[1])
+    print("-------------")
+    return best
 
-def selection(n, pop):
+def selection(pop):
+    global n
     def bubbleSort(arr):
-        n = len(arr)
         for i in range(n):
             for j in range(0, n-i-1):
-                if arr[j] > arr[j+1] :
+                if cost(arr[j]) > cost(arr[j+1]):
                     arr[j], arr[j+1] = arr[j+1], arr[j]
-        return arr    
-    bubbleSort(pop)
-    return pop[:n]
+        return arr 
+    new_pop = bubbleSort(pop)[:n//2]
+    return new_pop
     
-def mutation(k, pop):
+def mutation( pop):
     new_pop=[]
     for i in pop:
         new_pop.append(i)
@@ -96,14 +98,16 @@ def getFormula(cnf):
 if __name__ == "__main__":
     global num_vars
     global formula
-    n=10
-    k=5
-    max_flips=2000
+    global n
+    n=20
+    max_flips=200000000
     formula = getFormula(open(sys.argv[1], "r"))
-    pop = random_population(n + k)
-    best = best_individual(pop)
+    pop = random_population(n)
+    best = best_individual(pop, [None, 999999999999])
     for i in range (max_flips):
-        best_pop = selection(n, pop)
-        pop = mutation(k, best_pop)
-        best = best_individual(pop)
+        best_pop = selection(pop)
+        pop = mutation( best_pop)
+        best = best_individual(pop, best)
+    print("c fsat")
+    print("s UNSATISFIABLE")
     

@@ -57,24 +57,32 @@ if __name__ == "__main__":
     global formula
 
     formula = getFormula(open(sys.argv[1], "r"))
+    k = 2**num_vars#K debe ser el numero de posibles interpretaciones vecinas.
     for i in range(1, max_tries):
         interpretation=getRandomInterpretation()
         cost_interpretation = cost(interpretation)
         if cost_interpretation == 0:
-            print("c gsat-hill-climbing")
+            print("C COVID-19")
             print("s SATISFIABLE")
             print("v "+" ".join(map(str, interpretation)))
             exit()
         for j in range(1, max_flips):
+            not_stop=0
             flip_interpretation = flipped(interpretation)
             flip_cost = cost(flip_interpretation)
             if flip_cost < cost_interpretation:
+                #Si hemos mejorado el costo seguimos "subiendo".
                 interpretation = flip_interpretation
                 cost_interpretation = flip_cost
                 if cost_interpretation == 0:
-                    print("c gsat-hill-climbing")
+                    print("c COVID-19")
                     print("s SATISFIABLE")
                     print("v "+" ".join(map(str, flip_interpretation)))
                     exit()
-    print("c gsat-hill-cimbing")
+            else:
+                #Seguimos en la misma
+                ++not_stop
+                if not_stop>k:
+                    break
+    print("c COVID-19")
     print("s UNSATISFIABLE")

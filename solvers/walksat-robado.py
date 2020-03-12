@@ -29,21 +29,21 @@ def parse(filename):
             continue
         if line[0] == 'p':
             n_vars = int(line.split()[2])
-            lit_clause = [[] for _ in xrange(n_vars * 2 + 1)]
+            lit_clause = [[] for _ in range(n_vars * 2 + 1)]
             continue
 
         clause = []
         for literal in line[:-2].split():
             literal = int(literal)
             clause.append(literal)
-            lit_clause[literal].append(count)
+            lit_clause[literal].append(count)           # A cada literal le añade en que clausulas sale de la formula.
         clauses.append(clause)
         count += 1
     return clauses, n_vars, lit_clause
 
 
 def get_random_interpretation(n_vars):
-    return [i if random.random() < 0.5 else -i for i in xrange(n_vars + 1)]
+    return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
 
 
 def get_true_sat_lit(clauses, interpretation):
@@ -52,7 +52,7 @@ def get_true_sat_lit(clauses, interpretation):
         for lit in clause:
             if interpretation[abs(lit)] == lit:
                 true_sat_lit[index] += 1
-    return true_sat_lit
+    return true_sat_lit                                 #A cada clausula dice el numero de literales en True.
 
 
 def update_tsl(literal_to_flip, true_sat_lit, lit_clause):
@@ -63,7 +63,7 @@ def update_tsl(literal_to_flip, true_sat_lit, lit_clause):
 
 
 def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
-    break_min = sys.maxint
+    break_min = sys.maxsize
     best_literals = []
     for literal in clause:
 
@@ -90,18 +90,23 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
     while 1:
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
-        for _ in xrange(max_flips):
-
+        
+        for _ in range(max_flips):
+            
+            #lista con las clausulas que son insatisfactibles.
             unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
                                          not true_lit]
 
-            if not unsatisfied_clauses_index:
-                return interpretation
+            if not unsatisfied_clauses_index: #Si esta vacio es porque no tenemos clausulas insatisfactibles.
+                print('c walksat-robado')
+                print('s SATISFIABLE')
+                print('v ' + ' '.join(map(str, solution[1:])))
+                exit() 
 
-            clause_index = random.choice(unsatisfied_clauses_index)
+            clause_index = random.choice(unsatisfied_clauses_index)  #Elegimos una de las clausulas insatisfactibles.
             unsatisfied_clause = clauses[clause_index]
 
-            lit_to_flip = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause)
+            lit_to_flip = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause)  # De las clausulas insatisfactibles saca una.
 
             update_tsl(lit_to_flip, true_sat_lit, lit_clause)
 
@@ -110,9 +115,8 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])
-
     solution = run_sat(clauses, n_vars, lit_clause)
 
-    print 'c walksat-robado'
-    print 's SATISFIABLE'
-    print 'v ' + ' '.join(map(str, solution[1:]))
+    print("c walksat-robado")
+    print("s INSATISFIABLE")
+

@@ -1,6 +1,0 @@
-Traceback (most recent call last):
-  File "/home/f/frg5/local-search/solvers/walksat-robado.py", line 114, in <module>
-    solution = run_sat(clauses, n_vars, lit_clause)
-  File "/home/f/frg5/local-search/solvers/walksat-robado.py", line 96, in run_sat
-    not true_lit]
-KeyboardInterrupt

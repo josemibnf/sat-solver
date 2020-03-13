@@ -2,7 +2,7 @@
 
 import random
 import sys
-
+from multiprocessing import Pipe, Process
 
 def parse(filename):
     clauses = []
@@ -75,8 +75,11 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
     return random.choice(best_literals)
 
 
-def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
-    max_flips = n_vars * max_flips_proportion
+def run_sat():
+    global parent, child
+
+    clauses, n_vars, lit_clause = parse(sys.argv[1])
+    max_flips = n_vars * 4
     while 1:
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
@@ -85,10 +88,14 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
             unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
                                          not true_lit]
 
+            #if parent.recv()==True:
+            #    exit()
+
             if not unsatisfied_clauses_index:
                 print('c covid-19')
                 print('s SATISFIABLE')
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
+                #child.send(True)
                 exit()
 
             clause_index = random.choice(unsatisfied_clauses_index)
@@ -103,9 +110,23 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 
 if __name__ == '__main__':
+    global parent, child
 
-    clauses, n_vars, lit_clause = parse(sys.argv[1])
-    run_sat(clauses, n_vars, lit_clause)
+    p1 = Process(target=run_sat)
+    p2 = Process(target=run_sat)
+    p3 = Process(target=run_sat)
+    parent, child = Pipe()
 
+    pop=[p1, p2, p3]
+    #child.send(False)
+
+    for p in pop:
+        p.start()   
+    
+    for p in pop:
+        p.join()
+
+    #if parent.recv()==True:
+    #    exit()
     print('c covid-19')
     print('s INSATISFIABLE')

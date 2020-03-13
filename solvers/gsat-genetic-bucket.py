@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 import sys
 import random
 
@@ -122,7 +123,7 @@ if __name__ == "__main__":
     best = best_individual(pop, [None, 999999999999])
     for i in range (max_flips):
         best_pop = selection(pop)
-        pop = mutation( best_pop)
+        pop = mutation(best_pop)
         best = best_individual(pop, best)
     print("c fsat")
     print("s UNSATISFIABLE")

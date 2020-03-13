@@ -1,6 +1,8 @@
 #!/usr/bin/python3
+
 import random
 import sys
+
 
 def parse(filename):
     clauses = []
@@ -49,13 +51,13 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
     best_literals = []
     for literal in clause:
 
-        break_score = 0  
+        break_score = 0
 
-        for clause_index in lit_clause[-literal]: #Todas las clausulas que bajaran a 0.
+        for clause_index in lit_clause[-literal]:
             if true_sat_lit[clause_index] == 1:
                 break_score += 1
         
-        for clause_index in lit_clause[literal]: #Las clausulas de 0 que subiran a 1.
+        for clause_index in lit_clause[literal]:
             if true_sat_lit[clause_index] == 0:
                 break_score -=1
 
@@ -64,6 +66,11 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
             best_literals = [literal]
         elif break_score == break_min:
             best_literals.append(literal)
+
+    #Si el break_min esta en menos de 0 significa que el literal escogido no hace ningun 'daño'.
+    if break_min > 0 and random.random() < omega:
+        best_literals = clause
+        #Hay una probabilidad omega de que, si no hay un literal que nos perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
 
     return random.choice(best_literals)
 
@@ -82,11 +89,10 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
                 print('c covid-19')
                 print('s SATISFIABLE')
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-
+                exit()
 
             clause_index = random.choice(unsatisfied_clauses_index)
             unsatisfied_clause = clauses[clause_index]
-
 
             lit_to_flip = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause)
 
@@ -97,7 +103,9 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 
 if __name__ == '__main__':
+
     clauses, n_vars, lit_clause = parse(sys.argv[1])
-    solution = run_sat(clauses, n_vars, lit_clause)
+    run_sat(clauses, n_vars, lit_clause)
+
     print('c covid-19')
     print('s INSATISFIABLE')

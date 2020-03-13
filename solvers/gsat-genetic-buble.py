@@ -52,7 +52,6 @@ def best_individual(pop, best):
     return best
 
 def selection(pop):
-    global n
     def bubbleSort(arr):
         for i in range(n):
             for j in range(0, n-i-1):

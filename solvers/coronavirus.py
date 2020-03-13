@@ -2,7 +2,6 @@
 import random
 import sys
 
-
 def parse(filename):
     clauses = []
     count = 0
@@ -50,20 +49,21 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
     best_literals = []
     for literal in clause:
 
-        break_score = 0
+        break_score = 0  
 
-        for clause_index in lit_clause[-literal]:
+        for clause_index in lit_clause[-literal]: #Todas las clausulas que bajaran a 0.
             if true_sat_lit[clause_index] == 1:
                 break_score += 1
+        
+        for clause_index in lit_clause[literal]: #Las clausulas de 0 que subiran a 1.
+            if true_sat_lit[clause_index] == 0:
+                break_score -=1
 
         if break_score < break_min:
             break_min = break_score
             best_literals = [literal]
         elif break_score == break_min:
             best_literals.append(literal)
-
-    if break_min != 0 and random.random() < omega:
-        best_literals = clause
 
     return random.choice(best_literals)
 
@@ -79,10 +79,14 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
                                          not true_lit]
 
             if not unsatisfied_clauses_index:
-                return interpretation
+                print('c covid-19')
+                print('s SATISFIABLE')
+                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
+
 
             clause_index = random.choice(unsatisfied_clauses_index)
             unsatisfied_clause = clauses[clause_index]
+
 
             lit_to_flip = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause)
 
@@ -91,15 +95,9 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
             interpretation[abs(lit_to_flip)] *= -1
 
 
-def main():
-
-    clauses, n_vars, lit_clause = parse(sys.argv[1])
-
-    solution = run_sat(clauses, n_vars, lit_clause)
-
-    print('s SATISFIABLE')
-    print('v ' + ' '.join(map(str, solution[1:])) + ' 0')
-
 
 if __name__ == '__main__':
-    main()
+    clauses, n_vars, lit_clause = parse(sys.argv[1])
+    solution = run_sat(clauses, n_vars, lit_clause)
+    print('c covid-19')
+    print('s INSATISFIABLE')

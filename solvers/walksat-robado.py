@@ -79,8 +79,10 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
         elif break_score == break_min:
             best_literals.append(literal)
 
+    #Si el break_min esta en 0 significa que el literal escogido no hace ningun 'daño'.
     if break_min != 0 and random.random() < omega:
         best_literals = clause
+        #Hay una probabilidad omega de que, si no hay un literal que nos perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
 
     return random.choice(best_literals)
 

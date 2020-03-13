@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 #######################################################################
 # Copyright 2018 Marc Melis
 
@@ -29,7 +29,7 @@ def parse(filename):
             continue
         if line[0] == 'p':
             n_vars = int(line.split()[2])
-            lit_clause = [[] for _ in range(n_vars * 2 + 1)]
+            lit_clause = [[] for _ in xrange(n_vars * 2 + 1)]
             continue
 
         clause = []
@@ -43,7 +43,7 @@ def parse(filename):
 
 
 def get_random_interpretation(n_vars):
-    return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
+    return [i if random.random() < 0.5 else -i for i in xrange(n_vars + 1)]
 
 
 def get_true_sat_lit(clauses, interpretation):
@@ -63,7 +63,7 @@ def update_tsl(literal_to_flip, true_sat_lit, lit_clause):
 
 
 def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
-    break_min = sys.maxsize
+    break_min = sys.maxint
     best_literals = []
     for literal in clause:
 
@@ -90,7 +90,7 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
     while 1:
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
-        for _ in range(max_flips):
+        for _ in xrange(max_flips):
 
             unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
                                          not true_lit]
@@ -114,8 +114,8 @@ def main():
 
     solution = run_sat(clauses, n_vars, lit_clause)
 
-    print('s SATISFIABLE')
-    print('v ' + ' '.join(map(str, solution[1:])) + ' 0')
+    print 's SATISFIABLE'
+    print 'v ' + ' '.join(map(str, solution[1:])) + ' 0'
 
 
 if __name__ == '__main__':

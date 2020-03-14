@@ -88,14 +88,19 @@ def run_sat():
             unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
                                          not true_lit]
 
-            #if parent.recv()==True:
-            #    exit()
+            pepe=parent.recv()
+            if pepe==True:
+                child.send(True)
+                exit()
+            else:
+                child.send(False)
 
             if not unsatisfied_clauses_index:
                 print('c covid-19')
                 print('s SATISFIABLE')
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-                #child.send(True)
+                parent.recv()
+                child.send(True)
                 exit()
 
             clause_index = random.choice(unsatisfied_clauses_index)
@@ -115,18 +120,35 @@ if __name__ == '__main__':
     p1 = Process(target=run_sat)
     p2 = Process(target=run_sat)
     p3 = Process(target=run_sat)
+    p4 = Process(target=run_sat)
+    p5 = Process(target=run_sat)
+    p6 = Process(target=run_sat)
+    p7 = Process(target=run_sat)
+    p8 = Process(target=run_sat)
+    p9 = Process(target=run_sat)
+    p10 = Process(target=run_sat)
+    p11 = Process(target=run_sat)
+    p12= Process(target=run_sat)
+    p13= Process(target=run_sat)
+    p14= Process(target=run_sat)
+    p15= Process(target=run_sat)
+    p16= Process(target=run_sat)
+    p17 = Process(target=run_sat)
+    p18= Process(target=run_sat)
+    p19= Process(target=run_sat)
+    p20= Process(target=run_sat)
+
     parent, child = Pipe()
 
-    pop=[p1, p2, p3]
-    #child.send(False)
+    pop=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
+    child.send(False)
 
     for p in pop:
-        p.start()   
-    
+        p.start() 
+
     for p in pop:
         p.join()
 
-    #if parent.recv()==True:
-    #    exit()
-    print('c covid-19')
-    print('s INSATISFIABLE')
+    if parent.recv()==False:
+        print('c covid-19')
+        print('s INSATISFIABLE')

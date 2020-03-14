@@ -2,7 +2,8 @@
 
 import random
 import sys
-from multiprocessing import Condition, Process
+from multiprocessing import Process, Value
+from ctypes import c_bool
 
 def parse(filename):
     clauses = []
@@ -88,10 +89,10 @@ def run_sat():
             unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
                                          not true_lit]
 
-            if eco==True:
+            if bool(eco.value) is True:
                 exit()
             elif not unsatisfied_clauses_index:
-                eco=True
+                eco.value = 1
                 print('c covid-19')
                 print('s SATISFIABLE')
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
@@ -132,18 +133,18 @@ if __name__ == '__main__':
     p19 = Process(target=run_sat)
     p20 = Process(target=run_sat)
 
-    eco = False
+    eco = Value('i', 0)
 
     pop=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
 
-    for p in pop:
+    for p in pop[:1]:
         p.start()
 
-    for p in pop:
+    for p in pop[:1]:
         p.join()
 
     
-    if eco == False:
+    if bool(eco.value) is False:
         print('c covid-19')
         print('s INSATISFIABLE')
         exit()

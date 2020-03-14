@@ -2,7 +2,7 @@
 
 import random
 import sys
-from multiprocessing import Lock, Process
+
 
 def parse(filename):
     clauses = []
@@ -56,10 +56,6 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
         for clause_index in lit_clause[-literal]:
             if true_sat_lit[clause_index] == 1:
                 break_score += 1
-        
-        for clause_index in lit_clause[literal]:
-            if true_sat_lit[clause_index] == 0:
-                break_score -=1
 
         if break_score < break_min:
             break_min = break_score
@@ -67,19 +63,16 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
         elif break_score == break_min:
             best_literals.append(literal)
 
-    #Si el break_min esta en menos de 0 significa que el literal escogido no hace ningun 'daño'.
-    if break_min > 0 and random.random() < omega:
+    #Si el break_min esta en 0 significa que el literal escogido no hace ningun 'daño'.
+    if break_min != 0 and random.random() < omega:
         best_literals = clause
         #Hay una probabilidad omega de que, si no hay un literal que nos perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
 
     return random.choice(best_literals)
 
 
-def run_sat():
-    global eco
-
-    clauses, n_vars, lit_clause = parse(sys.argv[1])
-    max_flips = n_vars * 4
+def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
+    max_flips = n_vars * max_flips_proportion
     while 1:
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
@@ -89,13 +82,7 @@ def run_sat():
                                          not true_lit]
 
             if not unsatisfied_clauses_index:
-                eco.acquire(timeout=0.1)
-                try:
-                    print('c happy')
-                    print('s SATISFIABLE')
-                    print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-                finally:
-                    exit()
+                return interpretation
 
             clause_index = random.choice(unsatisfied_clauses_index)
             unsatisfied_clause = clauses[clause_index]
@@ -107,44 +94,16 @@ def run_sat():
             interpretation[abs(lit_to_flip)] *= -1
 
 
+def main():
+
+    clauses, n_vars, lit_clause = parse(sys.argv[1])
+
+    solution = run_sat(clauses, n_vars, lit_clause)
+
+    print('c happy')
+    print('s SATISFIABLE')
+    print('v ' + ' '.join(map(str, solution[1:])) + ' 0')
+
 
 if __name__ == '__main__':
-    global eco
-
-    p1 = Process(target=run_sat)
-    p2 = Process(target=run_sat)
-    p3 = Process(target=run_sat)
-    p4 = Process(target=run_sat)
-    p5 = Process(target=run_sat)
-    p6 = Process(target=run_sat)
-    p7 = Process(target=run_sat)
-    p8 = Process(target=run_sat)
-    p9 = Process(target=run_sat)
-    p10 = Process(target=run_sat)
-    p11 = Process(target=run_sat)
-    p12 = Process(target=run_sat)
-    p13 = Process(target=run_sat)
-    p14 = Process(target=run_sat)
-    p15 = Process(target=run_sat)
-    p16 = Process(target=run_sat)
-    p17 = Process(target=run_sat)
-    p18 = Process(target=run_sat)
-    p19 = Process(target=run_sat)
-    p20 = Process(target=run_sat)
-
-    eco = Lock()
-
-    pop=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
-
-    for p in pop:
-        p.start()
-
-    for p in pop:
-        p.join()
-
-    eco.acquire(timeout=0.1)
-    try:
-        print('c happy')
-        print('s INSATISFIABLE')
-    finally:
-        exit()
+    main()

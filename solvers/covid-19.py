@@ -111,6 +111,7 @@ def run_sat():
 
 if __name__ == '__main__':
     global eco
+    n=20
 
     p1 = Process(target=run_sat)
     p2 = Process(target=run_sat)
@@ -137,10 +138,10 @@ if __name__ == '__main__':
 
     pop=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
 
-    for p in pop[:1]:
+    for p in pop[:n]:
         p.start()
 
-    for p in pop[:1]:
+    for p in pop[:n]:
         p.join()
 
     

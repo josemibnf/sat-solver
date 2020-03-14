@@ -2,7 +2,7 @@
 
 import random
 import sys
-from multiprocessing import Condition, Process
+from multiprocessing import Lock, Process
 
 def parse(filename):
     clauses = []
@@ -88,14 +88,14 @@ def run_sat():
             unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
                                          not true_lit]
 
-            if eco==True:
-                exit()
-            elif not unsatisfied_clauses_index:
-                eco=True
-                print('c covid-19')
-                print('s SATISFIABLE')
-                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-                exit()
+            if not unsatisfied_clauses_index:
+                eco.acquire(timeout=0.1)
+                try:
+                    print('c happy')
+                    print('s SATISFIABLE')
+                    print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
+                finally:
+                    exit()
 
             clause_index = random.choice(unsatisfied_clauses_index)
             unsatisfied_clause = clauses[clause_index]
@@ -132,7 +132,7 @@ if __name__ == '__main__':
     p19 = Process(target=run_sat)
     p20 = Process(target=run_sat)
 
-    eco = False
+    eco = Lock()
 
     pop=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
 
@@ -142,8 +142,9 @@ if __name__ == '__main__':
     for p in pop:
         p.join()
 
-    
-    if eco == False:
-        print('c covid-19')
+    eco.acquire(timeout=0.1)
+    try:
+        print('c happy')
         print('s INSATISFIABLE')
+    finally:
         exit()

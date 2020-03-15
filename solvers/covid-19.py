@@ -77,10 +77,9 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
 
 
 def run_sat():
-    global eco
+    global eco, clauses, n_vars, lit_clause
 
-    clauses, n_vars, lit_clause = parse(sys.argv[1])
-    max_flips = n_vars * 40
+    max_flips = n_vars * 4
     for flip in range(max_flips):
         print(flip)
 
@@ -111,9 +110,10 @@ def run_sat():
 
 
 if __name__ == '__main__':
-    global eco
+    global eco, clauses, n_vars, lit_clause
     n=20
 
+    clauses, n_vars, lit_clause = parse(sys.argv[1])
     p1 = Process(target=run_sat)
     p2 = Process(target=run_sat)
     p3 = Process(target=run_sat)

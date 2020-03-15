@@ -81,7 +81,7 @@ def run_sat():
 
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     max_flips = n_vars * 4
-    while 1:
+    while max_flips:
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
         for _ in range(max_flips):

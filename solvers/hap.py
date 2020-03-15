@@ -73,7 +73,7 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
 
 def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
     max_flips = n_vars * max_flips_proportion
-    while 1:
+    for flip in range(max_flips):
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
         for _ in range(max_flips):
@@ -82,7 +82,10 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
                                          not true_lit]
 
             if not unsatisfied_clauses_index:
-                return interpretation
+                
+                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
+
+
 
             clause_index = random.choice(unsatisfied_clauses_index)
             unsatisfied_clause = clauses[clause_index]
@@ -96,14 +99,13 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 def main():
 
+   
+
+    
+if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])
 
     solution = run_sat(clauses, n_vars, lit_clause)
 
     print('c happy')
-    print('s SATISFIABLE')
-    print('v ' + ' '.join(map(str, solution[1:])) + ' 0')
-
-
-if __name__ == '__main__':
-    main()
+    print('s INSATISFIABLE')

@@ -87,7 +87,6 @@ class CNF():
             c.show()
 
 
-# Main
 
 if __name__ == '__main__':
     # A random CNF generator
@@ -131,4 +130,3 @@ if __name__ == '__main__':
     cnf_formula = CNF(num_vars, num_clauses, clause_length)
     # Show formula
     cnf_formula.show()
-    

@@ -81,7 +81,6 @@ def run_sat():
 
     max_flips = n_vars * 4
     for flip in range(max_flips):
-        print(flip)
 
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
@@ -114,7 +113,6 @@ if __name__ == '__main__':
 
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     n_pop=len(clauses)//n_vars #poblacion en funcion del ratio clausulas/variables.
-    print(n_pop)
 
     p1 = Process(target=run_sat)
     p2 = Process(target=run_sat)

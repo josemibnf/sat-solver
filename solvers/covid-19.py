@@ -81,7 +81,8 @@ def run_sat():
 
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     max_flips = n_vars * 4
-    while max_flips:
+    for flip in range(max_flips):
+        print(flip)
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
         for _ in range(max_flips):
@@ -136,7 +137,7 @@ if __name__ == '__main__':
 
     eco = Value('i', 0)
 
-    pop=[p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
+    pop=[p1, p2]# p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20]
 
     for p in pop[:n]:
         p.start()

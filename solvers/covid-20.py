@@ -76,7 +76,7 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
     return random.choice(best_literals)
 
 
-def run_sat():
+def run_sat(int pid):
     global eco, ecos, clauses, n_vars, lit_clause
 
     max_flips = n_vars * 4
@@ -97,7 +97,8 @@ def run_sat():
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
                 exit()
             else:
-                # PURGE
+                ecos[pid] = len(unsatisfied_clauses_index)
+                purgue() # Necesitamos un semaforo?? Si esta de los peores clona el de mejor posicion y.
 
             clause_index = random.choice(unsatisfied_clauses_index)
             unsatisfied_clause = clauses[clause_index]
@@ -119,26 +120,26 @@ if __name__ == '__main__':
     print(lit_clause)
     n_pop=len(clauses)//n_vars #poblacion en funcion del ratio clausulas/variables.
 
-    p1 = Process(target=run_sat)
-    p2 = Process(target=run_sat)
-    p3 = Process(target=run_sat)
-    p4 = Process(target=run_sat)
-    p5 = Process(target=run_sat)
-    p6 = Process(target=run_sat)
-    p7 = Process(target=run_sat)
-    p8 = Process(target=run_sat)
-    p9 = Process(target=run_sat)
-    p10 = Process(target=run_sat)
-    p11 = Process(target=run_sat)
-    p12 = Process(target=run_sat)
-    p13 = Process(target=run_sat)
-    p14 = Process(target=run_sat)
-    p15 = Process(target=run_sat)
-    p16 = Process(target=run_sat)
-    p17 = Process(target=run_sat)
-    p18 = Process(target=run_sat)
-    p19 = Process(target=run_sat)
-    p20 = Process(target=run_sat)
+    p1 = Process(target=run_sat, args=(1))
+    p2 = Process(target=run_sat, args=(2))
+    p3 = Process(target=run_sat, args=(3))
+    p4 = Process(target=run_sat, args=(4))
+    p5 = Process(target=run_sat, args=(5))
+    p6 = Process(target=run_sat, args=(6))
+    p7 = Process(target=run_sat, args=(7))
+    p8 = Process(target=run_sat, args=(8))
+    p9 = Process(target=run_sat, args=(9))
+    p10 = Process(target=run_sat, args=(10))
+    p11 = Process(target=run_sat, args=(11))
+    p12 = Process(target=run_sat, args=(12))
+    p13 = Process(target=run_sat, args=(13))
+    p14 = Process(target=run_sat, args=(14))
+    p15 = Process(target=run_sat, args=(15))
+    p16 = Process(target=run_sat, args=(16))
+    p17 = Process(target=run_sat, args=(17))
+    p18 = Process(target=run_sat, args=(18))
+    p19 = Process(target=run_sat, args=(19))
+    p20 = Process(target=run_sat, args=(20))
 
     manager = Manager()
     ecos = manager.dict()

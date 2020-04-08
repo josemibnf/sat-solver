@@ -2,7 +2,6 @@
 
 import random
 import sys
-import math
 
 
 def parse(filename):
@@ -27,15 +26,8 @@ def parse(filename):
     return clauses, n_vars, lit_clause
 
 
-def get_random_interpretation(n_vars, n_clauses, frontera):
-    valor_0_1 = frontera[1] / n_clauses
-    omega = valor_0_1**(1/3)
-    if random.random() > omega    and len(frontera[0])!=0:
-        print("frontera", omega)
-        return random.choice(frontera[0])
-    else:
-        print("random")
-        return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
+def get_random_interpretation(n_vars):
+    return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
 
 
 def get_true_sat_lit(clauses, interpretation):
@@ -83,18 +75,12 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
 
     return random.choice(best_literals), up_frontera
 
-def prune(frontera):
-    new = []
-    for interpretacion in frontera[0]:
-        if interpretacion[1] < frontera[1]:
-            new.append(interpretacion)
-    return ( new, frontera[1])
 
 def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
     max_flips = n_vars * max_flips_proportion
-    frontera = ([], len(clauses))
+    frontera = len(clauses)
     while 1:
-        interpretation = get_random_interpretation(n_vars, len(clauses), frontera)
+        interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
         for _ in range(max_flips):
 
@@ -108,21 +94,19 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
                 exit()
 
+            if len(unsatisfied_clauses_index) > frontera  and  random.random() > frontera/len(clauses):
+                break
 
             clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
             unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
 
             lit_to_flip, up_frontera = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
             if up_frontera:
-                frontera = ( frontera[0] , len(unsatisfied_clauses_index) )
-                frontera = prune(frontera)
+                frontera = len(unsatisfied_clauses_index)
 
             # Actualizamos interpretacion.
             update_tsl(lit_to_flip, true_sat_lit, lit_clause)
             interpretation[abs(lit_to_flip)] *= -1
-
-        if len(unsatisfied_clauses_index) < frontera[1]:
-            frontera[0].append(interpretation)
 
  
 if __name__ == '__main__':

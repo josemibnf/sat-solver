@@ -94,7 +94,9 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
                 exit()
 
-            if len(unsatisfied_clauses_index) > frontera  and  random.random() > frontera/len(clauses):
+            valor_0_1 = frontera / len(clauses)
+            omega = valor_0_1**(1/3)
+            if len(unsatisfied_clauses_index) > frontera  and  random.random() > omega:
                 break
 
             clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.

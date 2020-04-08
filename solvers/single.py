@@ -77,7 +77,7 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
 
 def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
     max_flips = n_vars * max_flips_proportion
-    for flip in range(max_flips):
+    while 1:
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
         for _ in range(max_flips):

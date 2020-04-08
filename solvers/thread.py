@@ -80,7 +80,7 @@ def run_sat():
     global eco, clauses, n_vars, lit_clause
 
     max_flips = n_vars * 4
-    for flip in range(max_flips):
+    while 1:
 
         interpretation = get_random_interpretation(n_vars)
         true_sat_lit = get_true_sat_lit(clauses, interpretation)
@@ -145,8 +145,3 @@ if __name__ == '__main__':
 
     for p in pop[:n_pop]:
         p.join()
-
-    if bool(eco.value) is False:
-        print('c covid-19')
-        print('s INSATISFIABLE')
-        exit()

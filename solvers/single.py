@@ -47,28 +47,27 @@ def update_tsl(literal_to_flip, true_sat_lit, lit_clause):
 
 
 def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
-    break_min = sys.maxsize
+    min_daño = sys.maxsize
     best_literals = []
     for literal in clause:
 
-        break_score = 0
+        daño = 0
 
         for clause_index in lit_clause[-literal]:
             if true_sat_lit[clause_index] == 1:
-                break_score += 1
+                daño += 1
 
         for clause_index in lit_clause[literal]:
             if true_sat_lit[clause_index] == 0:
-                break_score -=1
+                daño -=1
 
-        if break_score < break_min:
-            break_min = break_score
+        if daño < min_daño:
+            min_daño = daño
             best_literals = [literal]
-        elif break_score == break_min:
+        elif daño == min_daño:
             best_literals.append(literal)
 
-    #Si el break_min esta en 0 significa que el literal escogido no hace ningun 'daño'.
-    if break_min != 0 and random.random() < omega:
+    if min_daño > 0 and random.random() < omega:
         best_literals = clause
         #Hay una probabilidad omega de que, si no hay un literal que nos perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
 
@@ -79,7 +78,7 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
     max_flips = n_vars * max_flips_proportion
     while 1:
         interpretation = get_random_interpretation(n_vars)
-        true_sat_lit = get_true_sat_lit(clauses, interpretation)
+        true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
         for _ in range(max_flips):
 
             unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
@@ -87,20 +86,20 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
             if not unsatisfied_clauses_index:
                 
-                print('c happy')
+                print('c single')
                 print('s SATISFIABLE')
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
                 exit()
 
 
 
-            clause_index = random.choice(unsatisfied_clauses_index)
-            unsatisfied_clause = clauses[clause_index]
+            clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
+            unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
 
-            lit_to_flip = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause)
+            lit_to_flip = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
 
+            # Actualizamos interpretacion.
             update_tsl(lit_to_flip, true_sat_lit, lit_clause)
-
             interpretation[abs(lit_to_flip)] *= -1
 
 
@@ -108,5 +107,3 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     run_sat(clauses, n_vars, lit_clause)
-    print('c happy')
-    print('s INSATISFIABLE')

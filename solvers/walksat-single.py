@@ -57,6 +57,10 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
             if true_sat_lit[clause_index] == 1:
                 break_score += 1
 
+        for clause_index in lit_clause[literal]:
+            if true_sat_lit[clause_index] == 0:
+                break_score -=1
+
         if break_score < break_min:
             break_min = break_score
             best_literals = [literal]
@@ -83,7 +87,10 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
             if not unsatisfied_clauses_index:
                 
+                print('c happy')
+                print('s SATISFIABLE')
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
+                exit()
 
 
 
@@ -97,15 +104,9 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
             interpretation[abs(lit_to_flip)] *= -1
 
 
-def main():
-
-   
-
-    
+ 
 if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])
-
-    solution = run_sat(clauses, n_vars, lit_clause)
-
+    run_sat(clauses, n_vars, lit_clause)
     print('c happy')
     print('s INSATISFIABLE')

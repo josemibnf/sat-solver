@@ -48,30 +48,29 @@ def update_tsl(literal_to_flip, true_sat_lit, lit_clause):
 
 
 def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
-    break_min = sys.maxsize
+    min_daño = sys.maxsize
     best_literals = []
     for literal in clause:
 
-        break_score = 0
+        daño = 0
 
         for clause_index in lit_clause[-literal]:
             if true_sat_lit[clause_index] == 1:
-                break_score += 1
-        
+                daño += 1
+
         for clause_index in lit_clause[literal]:
             if true_sat_lit[clause_index] == 0:
-                break_score -=1
+                daño -=1
 
-        if break_score < break_min:
-            break_min = break_score
+        if daño < min_daño:
+            min_daño = daño
             best_literals = [literal]
-        elif break_score == break_min:
+        elif daño == min_daño:
             best_literals.append(literal)
 
-    #Si el break_min esta en menos de 0 significa que el literal escogido no hace ningun 'daño'.
-    if break_min > 0 and random.random() < omega:
+    if min_daño > 0 and random.random() < omega:
         best_literals = clause
-        #Hay una probabilidad omega de que, si no hay un literal que nos perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
+        #Hay una probabilidad omega de que, si no hay un literal perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
 
     return random.choice(best_literals)
 

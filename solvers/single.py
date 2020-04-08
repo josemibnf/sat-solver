@@ -69,7 +69,7 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
 
     if min_daño > 0 and random.random() < omega:
         best_literals = clause
-        #Hay una probabilidad omega de que, si no hay un literal que nos perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
+        #Hay una probabilidad omega de que, si no hay un literal perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
 
     return random.choice(best_literals)
 

@@ -29,9 +29,9 @@ if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     ratio = len(clauses)/n_vars
 
-    if ratio > 3.5 and 4.5 > ratio:
-        print("Using single for {} ratio\n".format(ratio))
-        single.run_sat(clauses, n_vars, lit_clause)
-    else:
+    if (ratio >= 2 and 3 > ratio) or (ratio >= 6 and 7 > ratio):
         print("Using frontier for {} ratio\n".format(ratio))
         frontier.run_sat(clauses, n_vars, lit_clause)
+    else:
+        print("Using single for {} ratio\n".format(ratio))
+        single.run_sat(clauses, n_vars, lit_clause)

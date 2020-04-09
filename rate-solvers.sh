@@ -10,15 +10,22 @@ touch tmp-rating.txt
 for s in $SOLVERS
 do
 
-  # Seleccionar el nombre del solver (lo siento)
-  solver_name=$(echo $s | cut --complement -d/ -f 1 | cut -d. -f 1)
+  # Seleccionar el nombre del solver (Con el .py)
+  solver_name=$(echo $s | cut --complement -d/ -f 1)
 
-  echo "Rating $solver_name..."
+  # Comprueba que sea un solver valido (Lo es si su extension es .py)
+  if [[ $solver_name == *.py* ]]
+  then
 
-  # Ejecuta race.py
-  solver_time=$(./race.py $BENCHMARKS $s | grep "Total time =" | cut --complement -d= -f1)
+    solver_name=$(echo $solver_name | cut -d. -f 1)
+    echo "Rating $solver_name..."
 
-  echo "$solver_name =$solver_time" >> tmp-rating.txt
+    # Ejecuta race.py
+    solver_time=$(./race.py $BENCHMARKS $s | grep "Total time =" | cut --complement -d= -f1)
+
+    echo "$solver_name =$solver_time" >> tmp-rating.txt
+  fi
+
 done
 
 echo -e "\n### Ranking ###\n"

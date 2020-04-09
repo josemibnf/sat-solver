@@ -2,8 +2,28 @@
 
 import sys
 
-import single
-import frontier
+import solvers.single as single
+import solvers.frontier as frontier
+
+
+import sys
+import os
+import subprocess
+import random
+
+def train():
+    os.system("rm -r benchmark-folder/*")
+    try:
+        while 1:
+            n_var = random.randrange(1,999)
+            ratio = random.randrange(1,8)
+            n_clauses = n_var/ratio
+            rnd_cnf = "./rnd-cnf-gen-satisfiable.sh "+str(n_var)+" "+str(n_clauses)+" 3"
+            subprocess.call(rnd_cnf, shell=True)
+    except KeyboardInterrupt:
+        pass
+
+    os.system("./rate-solvers.sh")
 
 def parse(filename):
     clauses = []
@@ -25,7 +45,6 @@ def parse(filename):
         clauses.append(clause)
         count += 1
     return clauses, n_vars, lit_clause
-
 
 
 if __name__ == '__main__':

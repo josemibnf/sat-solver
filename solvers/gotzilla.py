@@ -2,6 +2,7 @@
 
 import sys
 import single
+import frontier
 
 def parse(filename):
     clauses = []
@@ -26,4 +27,11 @@ def parse(filename):
 
 if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])
-    single.run_sat(clauses, n_vars, lit_clause)
+    ratio = len(clauses)/n_vars
+
+    if ratio > 3.5 and 4.5 > ratio:
+        print("Using single for {} ratio\n".format(ratio))
+        single.run_sat(clauses, n_vars, lit_clause)
+    else:
+        print("Using frontier for {} ratio\n".format(ratio))
+        frontier.run_sat(clauses, n_vars, lit_clause)

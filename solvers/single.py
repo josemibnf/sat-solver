@@ -105,6 +105,5 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 
 if __name__ == '__main__':
-    sys.stderr.write("spam\n")
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     run_sat(clauses, n_vars, lit_clause)

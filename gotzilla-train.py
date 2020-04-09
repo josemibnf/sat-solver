@@ -13,4 +13,4 @@ try:
 except KeyboardInterrupt:
     pass
 
-
+os.system("./rate-solvers.sh")

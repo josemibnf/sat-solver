@@ -85,7 +85,7 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
                                          not true_lit]
 
             if not unsatisfied_clauses_index:
-                
+
                 print('c single')
                 print('s SATISFIABLE')
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
@@ -103,7 +103,8 @@ def run_sat(clauses, n_vars, lit_clause, max_flips_proportion=4):
             interpretation[abs(lit_to_flip)] *= -1
 
 
- 
+
 if __name__ == '__main__':
+    sys.stderr.write("spam\n")
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     run_sat(clauses, n_vars, lit_clause)

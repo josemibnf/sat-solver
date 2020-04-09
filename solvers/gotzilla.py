@@ -1,5 +1,6 @@
-import sys
+#!/usr/bin/python3
 
+import sys
 import single
 
 def parse(filename):

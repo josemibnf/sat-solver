@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+
 import single
 import frontier
 
@@ -24,6 +25,8 @@ def parse(filename):
         clauses.append(clause)
         count += 1
     return clauses, n_vars, lit_clause
+
+
 
 if __name__ == '__main__':
     clauses, n_vars, lit_clause = parse(sys.argv[1])

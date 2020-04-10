@@ -2,11 +2,11 @@
 # Ejecuta race.py para todo los benchmarks con todo los solvers, y los clasifica de mejor a peor.
 
 SOLVERS=solvers/* # Directorio que contiene los solvers a evaluar
-BENCHMARKS=benchmark-folder/ # Directorio que contiene los benchmarks que realizar
-
+FOLDER="benchmark-folder/"
+BENCHMARKS=$FOLDER${1}# Directorio que contiene los benchmarks que realizar
 chmod 777 $SOLVERS
 touch tmp-rating.txt
-
+echo $BENCHMARKS
 for s in $SOLVERS
 do
 

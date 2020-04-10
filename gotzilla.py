@@ -34,7 +34,7 @@ def train():
         pass
     
     # Rate CNFs
-
+    
     
 
 def parse(filename):

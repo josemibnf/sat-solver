@@ -16,10 +16,26 @@ import random
 
 def train():
     
-    # Generate CNFs
-    os.system("rm -r benchmark-folder/*")
+
+    def read_tmp_rating(dict):
+        f= open("tmp-rating.txt", "r")
+        for l in f.readlines():
+            s = l.split()
+            
+
+    dic = { 1:{},
+            2:{},
+            3:{},
+            4:{},
+            5:{},
+            6:{},
+            7:{},
+            8:{},
+        }
+    
     try:
         while 1:
+            os.system("rm -r benchmark-folder/*")
             if random.random() < 0.5:    # Mas variables que clausulas
                 n_var = random.randrange(1,999)
                 ratio = random.randrange(1,8)
@@ -30,12 +46,11 @@ def train():
                 n_var = n_clauses//ratio
             rnd_cnf = "./rnd-cnf-gen-satisfiable.sh "+str(n_var)+" "+str(n_clauses)+" 3"
             subprocess.call(rnd_cnf, shell=True)
+            subprocess.call("./rate-solvers.sh")
+            read_tmp_rating(dict)
+            os.system("rm -f tmp-rating.txt")
     except KeyboardInterrupt:
         pass
-    
-    # Rate CNFs
-    cnfs = {1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[]} # Coje los resultados y con pandas los guarda en un csv
-    pdcnf = pd.DataFrame(cnfs, index=['1','2','3','4','5','6','7','8'])
     
 
 def parse(filename):

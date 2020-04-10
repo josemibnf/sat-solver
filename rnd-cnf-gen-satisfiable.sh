@@ -1,6 +1,5 @@
 #!/bin/bash
 VAR=true
-RATIO=$2/$1
 FICHERO="benchmark-folder/hardness-$1-$2-$3.cnf"
 echo $FICHERO
 ((OPORTUNIDADES = $1 + $2))

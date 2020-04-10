@@ -292,7 +292,7 @@ def select_solver(hardness):
         "3": {"frontier": 60, "single": 40, "thread": 20},
         "4": {"frontier": 57, "single": 38, "thread": 19},
         "5": {"frontier": 51, "single": 34, "thread": 17},
-        "6": {"frontier": 57, "single": 38, run_sat"thread": 19},
+        "6": {"frontier": 57, "single": 38, "thread": 19},
         "7": {"frontier": 72, "single": 48, "thread": 24},
         "8": {"frontier": 6, "single": 4, "thread": 2}
     }

@@ -13,8 +13,6 @@ import subprocess
 import random
 
 def train():
-    
-
     def read_tmp_rating(ratio ,dic):
         new = {}
         ratio_dic = dic.get(ratio)

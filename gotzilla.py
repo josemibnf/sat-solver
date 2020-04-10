@@ -6,12 +6,17 @@ import solvers.single as single
 import solvers.frontier as frontier
 
 
+import pandas as pd 
+import numpy as np 
+
 import sys
 import os
 import subprocess
 import random
 
 def train():
+    
+    # Generate CNFs
     os.system("rm -r benchmark-folder/*")
     try:
         while 1:
@@ -27,8 +32,10 @@ def train():
             subprocess.call(rnd_cnf, shell=True)
     except KeyboardInterrupt:
         pass
+    
+    # Rate CNFs
 
-    os.system("./rate-solvers.sh")
+    
 
 def parse(filename):
     clauses = []

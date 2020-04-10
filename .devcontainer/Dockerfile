@@ -28,8 +28,8 @@ RUN apt-get update \
     && apt-get -y install python3-tk \
     && apt-get -y install python3-pip \
     && apt-get -y install minisat \
-    && pip install pandas \
-    && pip install numpy \
+    && pip3 install pandas \
+    && pip3 install numpy \
     #
     # Verify git, process tools, lsb-release (common in install instructions for CLIs) installed
     && apt-get -y install git openssh-client less iproute2 procps lsb-release \

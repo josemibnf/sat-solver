@@ -15,9 +15,14 @@ def train():
     os.system("rm -r benchmark-folder/*")
     try:
         while 1:
-            n_var = random.randrange(1,999)
-            ratio = random.randrange(1,8)
-            n_clauses = n_var/ratio
+            if random.random() < 0.5:    # Mas variables que clausulas
+                n_var = random.randrange(1,999)
+                ratio = random.randrange(1,8)
+                n_clauses = n_var//ratio
+            else:                       # Mas clausulas que variables
+                n_clauses = random.randrange(1,999)
+                ratio = random.randrange(1,8)
+                n_var = n_clauses//ratio
             rnd_cnf = "./rnd-cnf-gen-satisfiable.sh "+str(n_var)+" "+str(n_clauses)+" 3"
             subprocess.call(rnd_cnf, shell=True)
     except KeyboardInterrupt:
@@ -48,6 +53,7 @@ def parse(filename):
 
 
 if __name__ == '__main__':
+    """
     clauses, n_vars, lit_clause = parse(sys.argv[1])
     ratio = len(clauses)/n_vars
 
@@ -57,3 +63,5 @@ if __name__ == '__main__':
     else:
         print("Using single for {} ratio\n".format(ratio))
         single.run_sat(clauses, n_vars, lit_clause)
+    """
+    train()

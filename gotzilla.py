@@ -3,7 +3,6 @@
 import sys
 
 import solvers.single as single
-import solvers.frontier as frontier
 
 
 import json
@@ -23,6 +22,7 @@ def train():
         for i in range(3,0,-1):
             l = f.readline()
             solver = l.split()[0]
+            print(solver,end="   <<=-=>>   ")
             if solver in ratio_dic.keys():
                 score = ratio_dic.get(solver) + i
             else:
@@ -43,9 +43,10 @@ def train():
             if subprocess.call(rnd_cnf, shell=True) == 0:
                 subprocess.call("./rate-solvers.sh")
                 os.system("rm -r benchmark-folder/*")
+                print("\nBenchmark ",n_var," - ",n_clauses, end=" ------=>>>     ")
                 dic.update( read_tmp_rating(str(ratio) ,dic) )
             else:
-                print ("NO SE ENCONTRO SATISF")
+                print ("\nNO SE ENCONTRO SATISF")
     except KeyboardInterrupt:
         pass
     os.system("rm -f tmp-rating.txt && rm -f tmp.txt")
@@ -77,15 +78,4 @@ def parse(filename):
 
 
 if __name__ == '__main__':
-    """
-    clauses, n_vars, lit_clause = parse(sys.argv[1])
-    ratio = len(clauses)/n_vars
-
-    if (ratio >= 2 and 3 > ratio) or (ratio >= 6 and 7 > ratio):
-        print("Using frontier for {} ratio\n".format(ratio))
-        frontier.run_sat(clauses, n_vars, lit_clause)
-    else:
-        print("Using single for {} ratio\n".format(ratio))
-        single.run_sat(clauses, n_vars, lit_clause)
-    """
     train()

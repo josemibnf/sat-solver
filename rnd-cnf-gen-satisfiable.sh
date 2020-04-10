@@ -1,7 +1,6 @@
 #!/bin/bash
 VAR=true
 FICHERO="benchmark-folder/hardness-$1-$2-$3.cnf"
-echo $FICHERO
 ((OPORTUNIDADES = $1 + $2))
 while [[ "$VAR" == "true" && "$OPORTUNIDADES" != "0" ]]
 do

@@ -48,7 +48,7 @@ def train():
                 print ("NO SE ENCONTRO SATISF")
     except KeyboardInterrupt:
         pass
-    os.system("rm -f tmp-rating.txt")
+    os.system("rm -f tmp-rating.txt && rm -f tmp.txt")
     os.system("rm -r benchmark-folder/*")
     print("\n\n",dic)
     with open("gotzilla-train.json","w") as j:

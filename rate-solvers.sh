@@ -5,11 +5,12 @@ SOLVERS=solvers/* # Directorio que contiene los solvers a evaluar
 BENCHMARKS=benchmark-folder/ # Directorio que contiene los benchmarks que realizar
 chmod 777 $SOLVERS
 rm -r tmp-rating.txt
+rm -r tmp.txt
 touch tmp-rating.txt
+touch tmp.txt
 
 for s in $SOLVERS
 do
-
   # Seleccionar el nombre del solver (Con el .py)
   solver_name=$(echo $s | cut --complement -d/ -f 1)
 
@@ -22,9 +23,9 @@ do
     # Ejecuta race.py
     solver_time=$(./race.py $BENCHMARKS $s | grep "Total time =" | cut --complement -d= -f1)
 
-    echo "$solver_name =$solver_time" >> tmp-rating.txt
+    echo "$solver_name = $solver_time" >> tmp.txt
   fi
 
 done
 
-cat tmp-rating.txt | sort -n -k3 -t" "
+cat tmp.txt | sort -n -k3 -t" " > tmp-rating.txt

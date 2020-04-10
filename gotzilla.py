@@ -34,7 +34,8 @@ def train():
         pass
     
     # Rate CNFs
-    # Coje los resultados y con pandas los guarda en un csv
+    cnfs = {1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[]} # Coje los resultados y con pandas los guarda en un csv
+    pdcnf = pd.DataFrame(cnfs, index=['1','2','3','4','5','6','7','8'])
     
 
 def parse(filename):

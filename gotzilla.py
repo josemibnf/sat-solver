@@ -18,7 +18,6 @@ def train():
 
     def read_tmp_rating(ratio ,dic):
         new = {}
-        print(ratio)
         ratio_dic = dic.get(ratio)
         f = open("tmp-rating.txt", "r")
         for i in range(3,0,-1):
@@ -29,7 +28,7 @@ def train():
             else:
                 score = i
             new[solver] = score
-        return {ratio:ratio_dic.update(new)}
+        return {ratio:new}
 
     with open("gotzilla-train.json") as j:
         dic = json.load(j)
@@ -38,7 +37,7 @@ def train():
         os.system("rm -r benchmark-folder/*")
         while 1:
             n_var = random.randrange(1,999)
-            ratio = random.randrange(1,8)
+            ratio = random.randrange(1,9)
             n_clauses = n_var//ratio
             rnd_cnf = "./rnd-cnf-gen-satisfiable.sh "+str(n_var)+" "+str(n_clauses)+" 3"
             if subprocess.call(rnd_cnf, shell=True) == 0:

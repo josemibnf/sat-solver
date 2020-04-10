@@ -2,11 +2,11 @@
 # Ejecuta race.py para todo los benchmarks con todo los solvers, y los clasifica de mejor a peor.
 
 SOLVERS=solvers/* # Directorio que contiene los solvers a evaluar
-FOLDER="benchmark-folder/"
-BENCHMARKS=$FOLDER${1}# Directorio que contiene los benchmarks que realizar
+BENCHMARKS=benchmark-folder/ # Directorio que contiene los benchmarks que realizar
 chmod 777 $SOLVERS
+rm -r tmp-rating.txt
 touch tmp-rating.txt
-echo $BENCHMARKS
+
 for s in $SOLVERS
 do
 
@@ -18,7 +18,6 @@ do
   then
 
     solver_name=$(echo $solver_name | cut -d. -f 1)
-    echo "Rating $solver_name..."
 
     # Ejecuta race.py
     solver_time=$(./race.py $BENCHMARKS $s | grep "Total time =" | cut --complement -d= -f1)
@@ -28,6 +27,4 @@ do
 
 done
 
-echo -e "\n### Ranking ###\n"
 cat tmp-rating.txt | sort -n -k3 -t" "
-rm tmp-rating.txt

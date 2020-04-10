@@ -1,0 +1,3 @@
+frontier = 0.04
+single = 0.03
+thread = 20.00

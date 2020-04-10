@@ -17,6 +17,8 @@ def train():
     
 
     def read_tmp_rating(ratio ,dic):
+        new = {}
+        print(ratio)
         ratio_dic = dic.get(ratio)
         f = open("tmp-rating.txt", "r")
         for i in range(3,0,-1):
@@ -26,19 +28,11 @@ def train():
                 score = ratio_dic.get(solver) + i
             else:
                 score = i
-            ratio_dic[solver] = score
-        dic[ratio] = ratio_dic
-        return dic
+            new[solver] = score
+        return {ratio:ratio_dic.update(new)}
 
-    dic = { 1:{},
-            2:{},
-            3:{},
-            4:{},
-            5:{},
-            6:{},
-            7:{},
-            8:{},
-        }
+    with open("gotzilla-train.json") as j:
+        dic = json.load(j)
     
     try:
         os.system("rm -r benchmark-folder/*")
@@ -50,7 +44,7 @@ def train():
             if subprocess.call(rnd_cnf, shell=True) == 0:
                 subprocess.call("./rate-solvers.sh")
                 os.system("rm -r benchmark-folder/*")
-                dic = read_tmp_rating(ratio ,dic)
+                dic.update( read_tmp_rating(str(ratio) ,dic) )
             else:
                 print ("NO SE ENCONTRO SATISF")
     except KeyboardInterrupt:

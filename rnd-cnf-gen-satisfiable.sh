@@ -12,8 +12,8 @@ do
     else
         ((OPORTUNIDADES = OPORTUNIDADES -1))
     fi
-    echo $OPORTUNIDADES
 done
 if [[ "$OPORTUNIDADES" == "0" ]];then
     rm -f $FICHERO
+    exit -1
 fi

@@ -6,8 +6,7 @@ import solvers.single as single
 import solvers.frontier as frontier
 
 
-import pandas as pd 
-import numpy as np 
+import json
 
 import sys
 import os
@@ -17,11 +16,19 @@ import random
 def train():
     
 
-    def read_tmp_rating(dict):
-        f= open("tmp-rating.txt", "r")
-        for l in f.readlines():
-            s = l.split()
-            
+    def read_tmp_rating(ratio ,dic):
+        ratio_dic = dic.get(ratio)
+        f = open("tmp-rating.txt", "r")
+        for i in range(3,0,-1):
+            l = f.readline()
+            solver = l.split()[0]
+            if solver in ratio_dic.keys():
+                score = ratio_dic.get(solver) + i
+            else:
+                score = i
+            ratio_dic[solver] = score
+        dic[ratio] = ratio_dic
+        return dic
 
     dic = { 1:{},
             2:{},
@@ -34,24 +41,25 @@ def train():
         }
     
     try:
+        os.system("rm -r benchmark-folder/*")
         while 1:
-            os.system("rm -r benchmark-folder/*")
-            if random.random() < 0.5:    # Mas variables que clausulas
-                n_var = random.randrange(1,999)
-                ratio = random.randrange(1,8)
-                n_clauses = n_var//ratio
-            else:                       # Mas clausulas que variables
-                n_clauses = random.randrange(1,999)
-                ratio = random.randrange(1,8)
-                n_var = n_clauses//ratio
+            n_var = random.randrange(1,999)
+            ratio = random.randrange(1,8)
+            n_clauses = n_var//ratio
             rnd_cnf = "./rnd-cnf-gen-satisfiable.sh "+str(n_var)+" "+str(n_clauses)+" 3"
-            subprocess.call(rnd_cnf, shell=True)
-            subprocess.call("./rate-solvers.sh")
-            read_tmp_rating(dict)
-            os.system("rm -f tmp-rating.txt")
+            if subprocess.call(rnd_cnf, shell=True) == 0:
+                subprocess.call("./rate-solvers.sh")
+                os.system("rm -r benchmark-folder/*")
+                dic = read_tmp_rating(ratio ,dic)
+            else:
+                print ("NO SE ENCONTRO SATISF")
     except KeyboardInterrupt:
         pass
-    
+    os.system("rm -f tmp-rating.txt")
+    os.system("rm -r benchmark-folder/*")
+    print("\n\n",dic)
+    with open("gotzilla-train.json","w") as j:
+        json.dump( dic, j)
 
 def parse(filename):
     clauses = []

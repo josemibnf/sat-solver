@@ -34,7 +34,7 @@ def train():
         pass
     
     # Rate CNFs
-    
+    # Coje los resultados y con pandas los guarda en un csv
     
 
 def parse(filename):

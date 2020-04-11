@@ -76,4 +76,7 @@ def parse(filename):
 
 
 if __name__ == '__main__':
-    train()
+    if len(sys.argv) == 1:
+        train()
+    else:
+        print("cebolla")

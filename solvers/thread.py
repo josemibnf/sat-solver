@@ -75,7 +75,7 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
     return random.choice(best_literals)
 
 
-def run_sat():
+def run_sat_thread():
     global eco, clauses, n_vars, lit_clause
 
     max_flips = n_vars * 4
@@ -105,14 +105,9 @@ def run_sat():
 
             interpretation[abs(lit_to_flip)] *= -1
 
-
-
-if __name__ == '__main__':
+def run_sat(clauses, n_vars, lit_clause):
     global eco, clauses, n_vars, lit_clause  # eco=True ssi encontramos interpretacion valida.
 
-    clauses, n_vars, lit_clause = parse(sys.argv[1])
-    print(clauses)
-    print(lit_clause)
     n_pop=len(clauses)//n_vars #poblacion en funcion del ratio clausulas/variables.
 
     p1 = Process(target=run_sat)
@@ -144,3 +139,7 @@ if __name__ == '__main__':
 
     for p in pop[:n_pop]:
         p.join()
+
+if __name__ == '__main__':
+    clauses, n_vars, lit_clause = parse(sys.argv[1])
+    run_sat(clauses, n_vars, lit_clause)

@@ -79,4 +79,5 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         train()
     else:
-        print("cebolla")
+        clauses, n_vars, lit_clause = parse(sys.argv[1])
+        single.run_sat(clauses, n_vars, lit_clause)

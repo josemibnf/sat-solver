@@ -1,13 +1,18 @@
 #!/usr/bin/python3
 
-import sys
-
 import solvers.single as single
-
+import solvers.frontier1 as frontier1
+import solvers.frontier2 as frontier2
+import solvers.frontier3 as frontier3
+import solvers.frontier4 as frontier4
+import solvers.wall1 as wall1
+import solvers.wall2 as wall2
+import solvers.wall3 as wall3
+import solvers.wall4 as wall4
 
 import json
-
 import sys
+import operator
 import os
 import subprocess
 import random
@@ -74,10 +79,32 @@ def parse(filename):
         count += 1
     return clauses, n_vars, lit_clause
 
+def best(ratio):
+    bests = 0
+    bestk = None
+    for key, score in ratio:
+        if score > bests:
+            bests = score
+            bestk = key
+    if bestk is None:
+        print("Entrena mas campeon. ")
+        exit()
+    else:
+        return bestk, bests
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         train()
     else:
         clauses, n_vars, lit_clause = parse(sys.argv[1])
-        single.run_sat(clauses, n_vars, lit_clause)
+        ratio = n_vars//len(clauses)
+        if ratio > 8:
+            ratio = 0
+        if ratio < 1:
+            ratio = 1
+        ratio = str(ratio)
+        with open("gotzilla-train.json") as j:
+            data = json.load(j)
+        solver, score = best(data.get(ratio))
+        print("El solver es ", solver, " ya que saco un score de ", score)
+        solver.run_sat(clauses, n_vars, lit_clause)

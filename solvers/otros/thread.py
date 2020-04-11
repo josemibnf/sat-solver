@@ -76,7 +76,6 @@ def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
 
 
 def run_sat_thread():
-    global eco, clauses, n_vars, lit_clause
 
     max_flips = n_vars * 4
     while 1:
@@ -107,7 +106,6 @@ def run_sat_thread():
 
 def run_sat(clauses, n_vars, lit_clause):
     global eco, clauses, n_vars, lit_clause  # eco=True ssi encontramos interpretacion valida.
-
     n_pop=len(clauses)//n_vars #poblacion en funcion del ratio clausulas/variables.
 
     p1 = Process(target=run_sat)

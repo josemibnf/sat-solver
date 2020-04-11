@@ -2,3 +2,4 @@ out.txt
 .vscode
 tmp-limits.sh
 tmp-rating.sh
+__pycache__

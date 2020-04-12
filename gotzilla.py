@@ -1,16 +1,7 @@
 #!/usr/bin/python3
 
-import solvers.single as single
-import solvers.frontier1 as frontier1
-import solvers.frontier2 as frontier2
-import solvers.frontier3 as frontier3
-import solvers.frontier4 as frontier4
-import solvers.wall1 as wall1
-import solvers.wall2 as wall2
-import solvers.wall3 as wall3
-import solvers.wall4 as wall4
-
 import json
+import importlib
 import sys
 import operator
 import os
@@ -82,7 +73,7 @@ def parse(filename):
 def best(ratio):
     bests = 0
     bestk = None
-    for key, score in ratio:
+    for key, score in ratio.items():
         if score > bests:
             bests = score
             bestk = key
@@ -107,4 +98,5 @@ if __name__ == '__main__':
             data = json.load(j)
         solver, score = best(data.get(ratio))
         print("El solver es ", solver, " ya que saco un score de ", score)
-        solver.run_sat(clauses, n_vars, lit_clause)
+        solverlib = importlib.import_module("solvers."+solver)
+        solverlib.run_sat(clauses, n_vars, lit_clause)

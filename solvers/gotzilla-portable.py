@@ -104,9 +104,9 @@ def run_sat_single(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 ################################### FRONTIER ###################################
 
-def get_random_interpretation_frontier(n_vars, n_clauses, frontera, omega):
+def get_random_interpretation_frontier(n_vars, n_clauses, frontera, var_omega):
     valor_0_1 = frontera[1] / n_clauses
-    omega = valor_0_1**(1/omega)
+    omega = valor_0_1**(1/var_omega)
     if random.random() > omega    and len(frontera[0])!=0:
         return random.choice(frontera[0])
     else:
@@ -148,11 +148,11 @@ def prune(frontera):
             new.append(interpretacion)
     return ( new, frontera[1])
 
-def run_sat_frontier(clauses, n_vars, lit_clause, omega, max_flips_proportion=4):
+def run_sat_frontier(clauses, n_vars, lit_clause, var_omega, max_flips_proportion=4):
     max_flips = n_vars * max_flips_proportion
     frontera = ([], len(clauses))
     while 1:
-        interpretation = get_random_interpretation_frontier(n_vars, len(clauses), frontera, omega)
+        interpretation = get_random_interpretation_frontier(n_vars, len(clauses), frontera, var_omega)
         true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
         for _ in range(max_flips):
 
@@ -217,7 +217,7 @@ def compute_broken_wall(clause, true_sat_lit, lit_clause, omega=0.4):
 
     return random.choice(best_literals), up_frontera
 
-def run_sat_wall(clauses, n_vars, lit_clause, max_flips_proportion=4):
+def run_sat_wall(clauses, n_vars, lit_clause, var_omega, max_flips_proportion=4):
     max_flips = n_vars * max_flips_proportion
     frontera = len(clauses)
     while 1:
@@ -236,7 +236,7 @@ def run_sat_wall(clauses, n_vars, lit_clause, max_flips_proportion=4):
                 exit()
 
             valor_0_1 = frontera / len(clauses)
-            omega = valor_0_1**(1/1)
+            omega = valor_0_1**(1/var_omega)
             if len(unsatisfied_clauses_index) > frontera  and  random.random() > omega:
                 break
 
@@ -256,17 +256,7 @@ def run_sat_wall(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 def select_solver(hardness):
     omega = 0
-    solver_hardness = {
-        "1": {"frontier2": 5, "single": 2, "wall2": 1},
-        "2": {"frontier3": 3, "frontier1": 4, "frontier2": 5},
-        "3": {"frontier4": 3, "frontier1": 2, "frontier3": 1},
-        "4": {"wall1": 3, "frontier3": 2, "frontier4": 10},
-        "5": {"frontier3": 3, "frontier4": 2, "frontier1": 1},
-        "6": {"single": 5, "frontier2": 2, "frontier4": 1},
-        "7": {"frontier4": 3, "frontier1": 2, "frontier2": 3},
-        "8": {"frontier2": 3, "frontier3": 2, "wall1": 1}
-    }
-
+    solver_hardness = {"1": {"frontier1": 3, "frontier3": 3, "wall1": 1}, "2": {"single": 3, "frontier1": 2, "frontier2": 1}, "3": {"frontier2": 10, "single": 4, "wall3": 1}, "4": {"frontier2": 8, "wall4": 2, "frontier1": 5}, "5": {"frontier1": 6, "frontier2": 3, "frontier3": 3}, "6": {"frontier1": 10, "frontier2": 4, "single": 5}, "7": {"wall2": 4, "frontier1": 2, "frontier3": 4}, "8": {"frontier3": 3, "single": 2, "wall1": 1}}
     round_hardness = str(round(hardness))
     solvers_available = solver_hardness[round_hardness]
     best_solver = min(solvers_available, key=solvers_available.get)

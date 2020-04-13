@@ -93,8 +93,6 @@ def run_sat_single(clauses, n_vars, lit_clause, max_flips_proportion=4):
                 print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
                 exit()
 
-
-
             clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
             unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
 
@@ -106,9 +104,9 @@ def run_sat_single(clauses, n_vars, lit_clause, max_flips_proportion=4):
 
 ################################### FRONTIER ###################################
 
-def get_random_interpretation_frontier(n_vars, n_clauses, frontera):
+def get_random_interpretation_frontier(n_vars, n_clauses, frontera, omega):
     valor_0_1 = frontera[1] / n_clauses
-    omega = valor_0_1**(1/3)
+    omega = valor_0_1**(1/omega)
     if random.random() > omega    and len(frontera[0])!=0:
         return random.choice(frontera[0])
     else:
@@ -150,11 +148,11 @@ def prune(frontera):
             new.append(interpretacion)
     return ( new, frontera[1])
 
-def run_sat_frontier(clauses, n_vars, lit_clause, max_flips_proportion=4):
+def run_sat_frontier(clauses, n_vars, lit_clause, omega, max_flips_proportion=4):
     max_flips = n_vars * max_flips_proportion
     frontera = ([], len(clauses))
     while 1:
-        interpretation = get_random_interpretation_frontier(n_vars, len(clauses), frontera)
+        interpretation = get_random_interpretation_frontier(n_vars, len(clauses), frontera, omega)
         true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
         for _ in range(max_flips):
 
@@ -184,123 +182,33 @@ def run_sat_frontier(clauses, n_vars, lit_clause, max_flips_proportion=4):
         if len(unsatisfied_clauses_index) < frontera[1]:
             frontera[0].append(interpretation)
 
-#################################### THREAD ####################################
+##################################### WALL #####################################
 
-def get_random_interpretation_thread(n_vars):
-    return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
-
-def compute_broken_thread(clause, true_sat_lit, lit_clause, omega=0.4):
-    min_daño = sys.maxsize
-    best_literals = []
-    for literal in clause:
-
-        daño = 0
-
-        for clause_index in lit_clause[-literal]:
-            if true_sat_lit[clause_index] == 1:
-                daño += 1
-
-        for clause_index in lit_clause[literal]:
-            if true_sat_lit[clause_index] == 0:
-                daño -=1
-
-        if daño < min_daño:
-            min_daño = daño
-            best_literals = [literal]
-        elif daño == min_daño:
-            best_literals.append(literal)
-
-    if min_daño > 0 and random.random() < omega:
-        best_literals = clause
-        #Hay una probabilidad omega de que, si no hay un literal perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
-
-    return random.choice(best_literals)
-
-
-def run_sat_thread():
-    global eco, clauses, n_vars, lit_clause
-
-    max_flips = n_vars * 4
-    while 1:
-
-        interpretation = get_random_interpretation_thread(n_vars)
-        true_sat_lit = get_true_sat_lit(clauses, interpretation)
-        for _ in range(max_flips):
-            unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
-                                         not true_lit]
-
-            if bool(eco.value) is True:
-                exit()
-            elif not unsatisfied_clauses_index:
-                eco.value = 1
-                print('c covid-19')
-                print('s SATISFIABLE')
-                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-                exit()
-
-            clause_index = random.choice(unsatisfied_clauses_index)
-            unsatisfied_clause = clauses[clause_index]
-
-            lit_to_flip = compute_broken_thread(unsatisfied_clause, true_sat_lit, lit_clause)
-
-            update_tsl(lit_to_flip, true_sat_lit, lit_clause)
-
-            interpretation[abs(lit_to_flip)] *= -1
-
-def main_thread():
-    global eco, clauses, n_vars, lit_clause  # eco=True ssi encontramos interpretacion valida.
-
-    clauses, n_vars, lit_clause = parse(sys.argv[1])
-    n_pop=len(clauses)//n_vars #poblacion en funcion del ratio clausulas/variables.
-
-    p1 = Process(target=run_sat_thread)
-    p2 = Process(target=run_sat_thread)
-    p3 = Process(target=run_sat_thread)
-    p4 = Process(target=run_sat_thread)
-    p5 = Process(target=run_sat_thread)
-    p6 = Process(target=run_sat_thread)
-    p7 = Process(target=run_sat_thread)
-    p8 = Process(target=run_sat_thread)
-    p9 = Process(target=run_sat_thread)
-    p10 = Process(target=run_sat_thread)
-    p11 = Process(target=run_sat_thread)
-    p12 = Process(target=run_sat_thread)
-    p13 = Process(target=run_sat_thread)
-    p14 = Process(target=run_sat_thread)
-    p15 = Process(target=run_sat_thread)
-    p16 = Process(target=run_sat_thread)
-    p17 = Process(target=run_sat_thread)
-    p18 = Process(target=run_sat_thread)
-    p19 = Process(target=run_sat_thread)
-    p20 = Process(target=run_sat_thread)
-
-    eco = Value('i', 0)
-    pop=[ p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20 ]
-
-    for p in pop[:n_pop]:
-        p.start()
-
-    for p in pop[:n_pop]:
-        p.join()
 
 ################################### GOTZILLA ###################################
 
 def select_solver(hardness):
+    omega = 0
+
     solver_hardness = {
-        "1": {"frontier": 30, "single": 20, "thread": 10},
-        "2": {"single": 48, "frontier": 32, "thread": 16},
-        "3": {"frontier": 60, "single": 40, "thread": 20},
-        "4": {"frontier": 57, "single": 38, "thread": 19},
-        "5": {"frontier": 51, "single": 34, "thread": 17},
-        "6": {"frontier": 57, "single": 38, "thread": 19},
-        "7": {"frontier": 72, "single": 48, "thread": 24},
-        "8": {"frontier": 6, "single": 4, "thread": 2}
+        "1": {"frontier2": 5, "single": 2, "wall2": 1},
+        "2": {"frontier3": 3, "frontier1": 4, "frontier2": 5},
+        "3": {"frontier4": 3, "frontier1": 2, "frontier3": 1},
+        "4": {"wall1": 3, "frontier3": 2, "frontier4": 10},
+        "5": {"frontier3": 3, "frontier4": 2, "frontier1": 1},
+        "6": {"single": 5, "frontier2": 2, "frontier4": 1},
+        "7": {"frontier4": 3, "frontier1": 2, "frontier2": 3},
+        "8": {"frontier2": 3, "frontier3": 2, "wall1": 1}
     }
 
     round_hardness = str(round(hardness))
     best_solver = list(solver_hardness[round_hardness])[0]
 
-    return best_solver
+    if best_solver != "single":
+        omega = int(best_solver[len(best_solver)-1])
+        best_solver = best_solver[:-1]
+
+    return best_solver, omega
 
 if __name__ == '__main__':
 
@@ -311,11 +219,13 @@ if __name__ == '__main__':
     hardness = len(clauses)/n_vars
 
     # Seleccionar solver en funcion del hardness
-    solver = select_solver(hardness)
+    solver, omega = select_solver(hardness)
 
     if solver == "single":
         run_sat_single(clauses, n_vars, lit_clause)
     elif solver == "frontier":
-        run_sat_frontier(clauses, n_vars, lit_clause)
-    elif solver == "thread":
-        main_thread()
+        run_sat_frontier(clauses, n_vars, lit_clause, omega)
+    elif solver == "wall":
+        print("Not implemented yet")
+    else:
+        print("{} is not a valid solver".format(solver))

@@ -1,8 +1,0 @@
-frontier1 = 
-frontier2 = 
-frontier3 = 
-frontier4 = 
-gotzilla-portable = 
-single = 
-wall1 = 
-wall2 = 

@@ -22,7 +22,8 @@ def train():
             else:
                 score = i
             new[solver] = score
-        return {ratio:new}
+            ratio_dic.update(new)
+        return {ratio:ratio_dic}
 
     with open("gotzilla-train.json") as j:
         dic = json.load(j)

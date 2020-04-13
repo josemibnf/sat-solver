@@ -13,7 +13,7 @@ def train():
         new = {}
         ratio_dic = dic.get(ratio)
         f = open("tmp-rating.txt", "r")
-        for i in range(3,0,-1):
+        for i in range(9,0,-1):
             l = f.readline()
             solver = l.split()[0]
             print(solver,end="   <<=-=>>   ")

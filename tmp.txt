@@ -1,6 +1,0 @@
-frontier1 =  7.91
-frontier2 =  2.75
-frontier3 =  0.38
-frontier4 =  0.21
-gotzilla-portable =  60.30
-single =  0.40

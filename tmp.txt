@@ -1,9 +1,0 @@
-frontier1 =  0.03
-frontier2 =  0.01
-frontier3 =  0.03
-frontier4 =  0.01
-single =  0.00
-wall1 =  0.04
-wall2 =  0.03
-wall3 =  0.01
-wall4 =  0.04

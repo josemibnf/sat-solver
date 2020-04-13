@@ -5,8 +5,6 @@ import random
 from multiprocessing import Process, Value
 from ctypes import c_bool
 
-################################## COMPARTIDO ##################################
-
 def parse(filename):
     clauses = []
     count = 0
@@ -42,77 +40,7 @@ def update_tsl(literal_to_flip, true_sat_lit, lit_clause):
     for clause_index in lit_clause[-literal_to_flip]:
         true_sat_lit[clause_index] -= 1
 
-
-#################################### SINGLE ####################################
-
-def get_random_interpretation_single(n_vars):
-    return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
-
-def compute_broken_single(clause, true_sat_lit, lit_clause, omega=0.4):
-    min_daño = sys.maxsize
-    best_literals = []
-    for literal in clause:
-
-        daño = 0
-
-        for clause_index in lit_clause[-literal]:
-            if true_sat_lit[clause_index] == 1:
-                daño += 1
-
-        for clause_index in lit_clause[literal]:
-            if true_sat_lit[clause_index] == 0:
-                daño -=1
-
-        if daño < min_daño:
-            min_daño = daño
-            best_literals = [literal]
-        elif daño == min_daño:
-            best_literals.append(literal)
-
-    if min_daño > 0 and random.random() < omega:
-        best_literals = clause
-        #Hay una probabilidad omega de que, si no hay un literal perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
-
-    return random.choice(best_literals)
-
-
-def run_sat_single(clauses, n_vars, lit_clause, max_flips_proportion=4):
-    max_flips = n_vars * max_flips_proportion
-    while 1:
-        interpretation = get_random_interpretation_single(n_vars)
-        true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
-        for _ in range(max_flips):
-
-            unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
-                                         not true_lit]
-
-            if not unsatisfied_clauses_index:
-
-                print('c single')
-                print('s SATISFIABLE')
-                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-                exit()
-
-            clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
-            unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
-
-            lit_to_flip = compute_broken_single(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
-
-            # Actualizamos interpretacion.
-            update_tsl(lit_to_flip, true_sat_lit, lit_clause)
-            interpretation[abs(lit_to_flip)] *= -1
-
-################################### FRONTIER ###################################
-
-def get_random_interpretation_frontier(n_vars, n_clauses, frontera, var_omega):
-    valor_0_1 = frontera[1] / n_clauses
-    omega = valor_0_1**(1/var_omega)
-    if random.random() > omega    and len(frontera[0])!=0:
-        return random.choice(frontera[0])
-    else:
-        return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
-
-def compute_broken_frontier(clause, true_sat_lit, lit_clause, omega=0.4):
+def compute_broken(clause, true_sat_lit, lit_clause, omega=0.4):
     min_daño = sys.maxsize
     up_frontera = False
     best_literals = []
@@ -140,6 +68,78 @@ def compute_broken_frontier(clause, true_sat_lit, lit_clause, omega=0.4):
         #Hay una probabilidad omega de que, si no hay un literal perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
 
     return random.choice(best_literals), up_frontera
+
+def get_random_interpretation(n_vars, n_clauses=None, frontera=None, var_omega=None):
+    if solver == "frontier":
+        valor_0_1 = frontera[1] / n_clauses
+        omega = valor_0_1**(1/var_omega)
+        if random.random() > omega    and len(frontera[0])!=0:
+            return random.choice(frontera[0])
+
+    return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
+
+def run_sat(clauses, n_vars, lit_clause, var_omega=None, max_flips_proportion=4):
+    max_flips = n_vars * max_flips_proportion
+    if solver == "frontier":
+        frontera = ([], len(clauses))
+    else:
+        frontera = len(clauses)
+
+    while 1:
+        if solver == "frontier":
+            interpretation = get_random_interpretation(n_vars, len(clauses), frontera, var_omega)
+        else:
+            interpretation = get_random_interpretation(n_vars)
+
+        true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
+        for _ in range(max_flips):
+
+            unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
+                                         not true_lit]
+
+            if not unsatisfied_clauses_index:
+
+                print('c {}'.format(solver))
+                print('s SATISFIABLE')
+                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
+                exit()
+
+            if solver == "wall":
+                valor_0_1 = frontera / len(clauses)
+                omega = valor_0_1**(1/var_omega)
+                if len(unsatisfied_clauses_index) > frontera  and  random.random() > omega:
+                    break
+
+                clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
+                unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
+
+                lit_to_flip, up_frontera = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
+                if up_frontera:
+                    frontera = len(unsatisfied_clauses_index)
+
+            elif solver == "sigle":
+                clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
+                unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
+
+                lit_to_flip, up_frontera = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
+
+            elif solver == "frontier":
+
+                clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
+                unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
+
+                lit_to_flip, up_frontera = compute_broken(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
+                if up_frontera:
+                    frontera = ( frontera[0] , len(unsatisfied_clauses_index) )
+                    frontera = prune(frontera)
+
+            # Actualizamos interpretacion.
+            update_tsl(lit_to_flip, true_sat_lit, lit_clause)
+            interpretation[abs(lit_to_flip)] *= -1
+
+        if solver == "frontier":
+            if len(unsatisfied_clauses_index) < frontera[1]:
+                frontera[0].append(interpretation)
 
 def prune(frontera):
     new = []
@@ -147,110 +147,6 @@ def prune(frontera):
         if interpretacion[1] < frontera[1]:
             new.append(interpretacion)
     return ( new, frontera[1])
-
-def run_sat_frontier(clauses, n_vars, lit_clause, var_omega, max_flips_proportion=4):
-    max_flips = n_vars * max_flips_proportion
-    frontera = ([], len(clauses))
-    while 1:
-        interpretation = get_random_interpretation_frontier(n_vars, len(clauses), frontera, var_omega)
-        true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
-        for _ in range(max_flips):
-
-            unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
-                                         not true_lit]
-
-            if not unsatisfied_clauses_index:
-
-                print('c frontier')
-                print('s SATISFIABLE')
-                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-                exit()
-
-
-            clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
-            unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
-
-            lit_to_flip, up_frontera = compute_broken_frontier(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
-            if up_frontera:
-                frontera = ( frontera[0] , len(unsatisfied_clauses_index) )
-                frontera = prune(frontera)
-
-            # Actualizamos interpretacion.
-            update_tsl(lit_to_flip, true_sat_lit, lit_clause)
-            interpretation[abs(lit_to_flip)] *= -1
-
-        if len(unsatisfied_clauses_index) < frontera[1]:
-            frontera[0].append(interpretation)
-
-##################################### WALL #####################################
-
-def get_random_interpretation_wall(n_vars):
-    return [i if random.random() < 0.5 else -i for i in range(n_vars + 1)]
-
-# Igual que Frontier
-def compute_broken_wall(clause, true_sat_lit, lit_clause, omega=0.4):
-    min_daño = sys.maxsize
-    up_frontera = False
-    best_literals = []
-    for literal in clause:
-
-        daño = 0
-
-        for clause_index in lit_clause[-literal]:
-            if true_sat_lit[clause_index] == 1:
-                daño += 1
-
-        for clause_index in lit_clause[literal]:
-            if true_sat_lit[clause_index] == 0:
-                daño -=1
-
-        if daño < min_daño:
-            min_daño = daño
-            best_literals = [literal]
-        elif daño == min_daño:
-            best_literals.append(literal)
-
-    if min_daño > 0 and random.random() < omega:
-        best_literals = clause
-        up_frontera = True
-        #Hay una probabilidad omega de que, si no hay un literal perfecto, vayamos a barajar entre todos y no solo los de minimo 'daño'.
-
-    return random.choice(best_literals), up_frontera
-
-def run_sat_wall(clauses, n_vars, lit_clause, var_omega, max_flips_proportion=4):
-    max_flips = n_vars * max_flips_proportion
-    frontera = len(clauses)
-    while 1:
-        interpretation = get_random_interpretation_wall(n_vars)
-        true_sat_lit = get_true_sat_lit(clauses, interpretation) # lista de positivos en cada clausula
-        for _ in range(max_flips):
-
-            unsatisfied_clauses_index = [index for index, true_lit in enumerate(true_sat_lit) if
-                                         not true_lit]
-
-            if not unsatisfied_clauses_index:
-
-                print('c frontier')
-                print('s SATISFIABLE')
-                print('v ' + ' '.join(map(str, interpretation[1:])) + ' 0')
-                exit()
-
-            valor_0_1 = frontera / len(clauses)
-            omega = valor_0_1**(1/var_omega)
-            if len(unsatisfied_clauses_index) > frontera  and  random.random() > omega:
-                break
-
-            clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
-            unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
-
-            lit_to_flip, up_frontera = compute_broken_wall(unsatisfied_clause, true_sat_lit, lit_clause) # Literal que modificamos.
-            if up_frontera:
-                frontera = len(unsatisfied_clauses_index)
-
-            # Actualizamos interpretacion.
-            update_tsl(lit_to_flip, true_sat_lit, lit_clause)
-            interpretation[abs(lit_to_flip)] *= -1
-
 
 ################################### GOTZILLA ###################################
 
@@ -279,10 +175,10 @@ if __name__ == '__main__':
     solver, omega = select_solver(hardness)
 
     if solver == "single":
-        run_sat_single(clauses, n_vars, lit_clause)
+        run_sat(clauses, n_vars, lit_clause)
     elif solver == "frontier":
-        run_sat_frontier(clauses, n_vars, lit_clause, omega)
+        run_sat(clauses, n_vars, lit_clause, omega)
     elif solver == "wall":
-        run_sat_wall(clauses, n_vars, lit_clause, omega)
+        run_sat(clauses, n_vars, lit_clause, omega)
     else:
         print("{} is not a valid solver".format(solver))

@@ -26,7 +26,7 @@ def train():
 
     with open("gotzilla-train.json") as j:
         dic = json.load(j)
-    
+
     try:
         os.system("rm -r benchmark-folder/*")
         while 1:

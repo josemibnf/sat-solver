@@ -117,7 +117,7 @@ def run_sat(clauses, n_vars, lit_clause, var_omega=None, max_flips_proportion=4)
                 if up_frontera:
                     frontera = len(unsatisfied_clauses_index)
 
-            elif solver == "sigle":
+            elif solver == "single":
                 clause_index = random.choice(unsatisfied_clauses_index) # Seleccionamos random una de las clausulas F.
                 unsatisfied_clause = clauses[clause_index] # Obtenemos la clausula.
 
@@ -152,7 +152,7 @@ def prune(frontera):
 
 def select_solver(hardness):
     omega = 0
-    solver_hardness = {"1": {"frontier1": 3, "frontier3": 3, "wall1": 1}, "2": {"single": 3, "frontier1": 2, "frontier2": 1}, "3": {"frontier2": 10, "single": 4, "wall3": 1}, "4": {"frontier2": 8, "wall4": 2, "frontier1": 5}, "5": {"frontier1": 6, "frontier2": 3, "frontier3": 3}, "6": {"frontier1": 10, "frontier2": 4, "single": 5}, "7": {"wall2": 4, "frontier1": 2, "frontier3": 4}, "8": {"frontier3": 3, "single": 2, "wall1": 1}}
+    solver_hardness = {"1": {"frontier3": 13, "wall4": 2, "frontier1": 9}, "2": {"frontier2": 10, "wall2": 2, "frontier1": 4}, "3": {"frontier1": 22, "frontier2": 19, "frontier3": 1}, "4": {"frontier3": 6, "frontier1": 3, "frontier4": 1}, "5": {"frontier3": 3, "single": 2, "frontier1": 5}, "6": {"frontier1": 3, "frontier3": 2, "single": 1}, "7": {"frontier1": 9, "frontier2": 2, "frontier3": 9}, "8": {"single": 12, "wall2": 2, "wall4": 2}}
     round_hardness = str(round(hardness))
     solvers_available = solver_hardness[round_hardness]
     best_solver = min(solvers_available, key=solvers_available.get)

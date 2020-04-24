@@ -92,7 +92,7 @@ def draw_graph():
     cnf_formula.write()
 
     # Call the solver and get the solution
-    solution = frontier1.solve("graph-cnf.txt")
+    solution = frontier1.solve("graph-coloring-cnf.txt")
     print("\nSolver solution:\n", " ".join(solution))
 
     # Get coloring solution

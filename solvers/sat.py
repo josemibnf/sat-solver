@@ -71,7 +71,7 @@ class CNF():
 				continue
 			if l.strip() == "":
 				continue
-			sl = map(int, l.split())
+			sl = list(map(int, l.split()))
 			sl.pop() # Remove last 0
 			self.clauses.append(sl)
 

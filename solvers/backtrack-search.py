@@ -25,9 +25,12 @@ class Interpretation:
 		for c in self.clauses:
 			pass
 
+	
+
 
 if __name__ == "__main__":
 	i = Interpretation(3, [[1,-2],[2,3]])
+	i.vars=[None, True, None, None, None, None]
 	print(i.clauses)
 	print(i.vars)
 	print("-------")

@@ -15,7 +15,7 @@ class Interpretation:
 		for c in self.clauses:
 			for l in c:
 				if ( value(l) == True and l >0 ) or ( value(l) == False and l <0 ) :
-					c = c.remove(l)   #No se si en algun momento esto puede dar error.
+					c.remove(l)
 
 	def check_unit(self):
 		def get_value(c):
@@ -30,16 +30,14 @@ class Interpretation:
 				self.vars[-1*l] = False
 			else:
 				self.vars[l] = True
-		cleaner= self.clauses
 		for c in self.clauses:
 			if len(c)==1:
 				if get_value(c) == None:
 					put_value(c)
-					cleaner = cleaner.remove(c)
+					self.clauses.remove(c)
 				else:
 					print("ESTA INTERPRETACION NO ME VALE")
 					exit()
-		self.clauses=cleaner
 
 	def show(self):
 		print("-----")

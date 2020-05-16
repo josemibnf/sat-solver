@@ -14,8 +14,10 @@ class Interpretation:
 				return self.vars[l]
 		for c in self.clauses:
 			for l in c:
-				if ( value(l) == True and l >0 ) or ( value(l) == False and l <0 ) :
+				if ( value(l) == False and l <0 ) :
 					c.remove(l)
+				elif ( value(l) == True and l >0 ) :
+					self.clauses.remove(c)
 
 	def check_unit(self):
 		def get_value(c):
@@ -47,8 +49,8 @@ class Interpretation:
 
 
 if __name__ == "__main__":
-	i = Interpretation(3, [[1,-2],[2,3]])
-	i.vars=[None, True, None, None, None, None]
+	i = Interpretation(5, [[1,-2],[2,3,-4],[5,-5]])
+	i.vars=[None, True, None, None, None, False]
 	i.show()
 	i.simplify()
 	i.show()

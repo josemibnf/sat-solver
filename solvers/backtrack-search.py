@@ -6,6 +6,27 @@ class Interpretation:
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
 	
+	def davis(self):
+		def get_var_clauses(v):
+			var_clauses=[None]*(len(self.clauses))
+			for c in self.clauses:
+				for l in c:
+					if l==v :
+						var_clauses.append[self.clauses.index(c)]
+					elif -l==v :
+						var_clauses.append[-self.clauses.index(c)]
+			return var_clauses
+		def fusion( v, i1, i2):
+			#Toma dos indices de clausulas y las fusiona quitando el literal v.
+			pass
+		def take_and_clean( clauses, bool):
+			#bool False/True devuelve una clausula negativa/positiva de clauses y la borra.
+			return None
+		for v in range(self.n_vars):
+			clauses = get_var_clauses(v)
+			if len(clauses)>1:
+				fusion( v, take_and_clean( clauses, False), take_and_clean( clauses, True))
+
 	def simplify(self):
 		def value(l):
 			if l < 0:
@@ -51,6 +72,8 @@ class Interpretation:
 if __name__ == "__main__":
 	i = Interpretation(5, [[1,-2],[2,3,-4],[5,-5]])
 	i.vars=[None, True, None, None, None, False]
+	i.show()
+	i.davis()
 	i.show()
 	i.simplify()
 	i.show()

@@ -11,30 +11,45 @@ class Interpretation:
 			if l < 0:
 				return self.vars[-1*l]
 			else:
-				print(self.vars)
 				return self.vars[l]
 		for c in self.clauses:
 			for l in c:
-				if value(l) == None:
-					print(l,c)
-				elif ( value(l) == True and l >0 ) or ( value(l) == False and l <0 ) :
-					print("remove")
+				if ( value(l) == True and l >0 ) or ( value(l) == False and l <0 ) :
 					c = c.remove(l)
 
 	def check_unit(self):
+		def get_value(c):
+			l = c[0]
+			if l < 0:
+				return self.vars[-1*l]
+			else:
+				return self.vars[l]
+		def put_value(c):
+			l = c[0]
+			if l < 0:
+				self.vars[-1*l] = False
+			else:
+				self.vars[l] = True
 		for c in self.clauses:
-			pass
+			if len(c)==1:
+				if get_value(c) == None:
+					put_value(c)
+				else:
+					print("ESTA INTERPRETACION NO ME VALE")
+					exit()
 
-	
+	def show(self):
+		print("-----")
+		print(self.clauses)
+		print(self.vars)
+		print("-------")
 
 
 if __name__ == "__main__":
 	i = Interpretation(3, [[1,-2],[2,3]])
 	i.vars=[None, True, None, None, None, None]
-	print(i.clauses)
-	print(i.vars)
-	print("-------")
+	i.show()
 	i.simplify()
-	print("-----")
-	print(i.clauses)
-	print(i.vars)
+	i.show()
+	i.check_unit()
+	i.show()

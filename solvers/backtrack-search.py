@@ -17,15 +17,24 @@ class Interpretation:
 						var_clauses.append[-self.clauses.index(c)]
 			return var_clauses
 		def fusion( v, i1, i2):
-			#Toma dos indices de clausulas y las fusiona quitando el literal v.
-			pass
-		def take_and_clean( clauses, bool):
-			#bool False/True devuelve una clausula negativa/positiva de clauses y la borra.
-			return None
+			#Toma dos indices de clausulas y las fusiona quitando el literal v, y lo añade.
+			c1 = self.clauses[i1].remove(v)
+			c2 = self.clauses[i2].remove(v)
+			self.clauses.append(c1+c2)
 		for v in range(self.n_vars):
-			clauses = get_var_clauses(v)
-			if len(clauses)>1:
-				fusion( v, take_and_clean( clauses, False), take_and_clean( clauses, True))
+			var_clauses = get_var_clauses(v)
+			while len(var_clauses)>1:
+				contrario = None
+				for c in var_clauses[1:]:
+					if c>0 and var_clauses[0]<0 :
+						contrario = c
+					elif c>0 and var_clauses[0]<0 :
+						contrario = c
+				if contrario==None:
+					break # Son todas del mismo signo, no hay nada que fusionar.
+				else:
+					fusion( v, var_clauses[0], var_clauses[contrario])
+				
 
 	def simplify(self):
 		def value(l):

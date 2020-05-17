@@ -8,20 +8,28 @@ class Interpretation:
 	
 	def davis(self):
 		def get_var_clauses(v):
-			var_clauses=[None]*(len(self.clauses))
+			print("Obteniendo el var_clauses de la varialbe ",v, "  en ", self.clauses)
+			var_clauses = []
 			for c in self.clauses:
+				print("Vamos a ver la clausula  ", c)
 				for l in c:
+					print(" El literal ...  ",l )
 					if l==v :
-						var_clauses.append[self.clauses.index(c)]
+						var_clauses.append((self.clauses.index(c),True)) #Is positive
+						print("         Añado el indice de la clausula ",c, " ----> ",var_clauses," <------")
 					elif -l==v :
-						var_clauses.append[-self.clauses.index(c)]
+						var_clauses.append((self.clauses.index(c),False)) #Is not positive
+						print("         Añado el indice de la clausula ",c, " ----> ",var_clauses," <------")
+			print("Saco ", var_clauses," de la  variable ",v," de ",self.clauses,"\n")
 			return var_clauses
 		def fusion( v, i1, i2):
 			#Toma dos indices de clausulas y las fusiona quitando el literal v, y lo añade.
 			c1 = self.clauses[i1].remove(v)
 			c2 = self.clauses[i2].remove(v)
+			self.clauses.remove(c1)
+			self.clauses.remove(c2)
 			self.clauses.append(c1+c2)
-		for v in range(self.n_vars):
+		for v in range(1,self.n_vars+1):
 			var_clauses = get_var_clauses(v)
 			while len(var_clauses)>1:
 				contrario = None
@@ -34,6 +42,7 @@ class Interpretation:
 					break # Son todas del mismo signo, no hay nada que fusionar.
 				else:
 					fusion( v, var_clauses[0], var_clauses[contrario])
+					var_clauses = get_var_clauses(v)
 				
 
 	def simplify(self):
@@ -84,7 +93,9 @@ if __name__ == "__main__":
 	i.show()
 	i.davis()
 	i.show()
+	"""
 	i.simplify()
 	i.show()
 	i.check_unit()
 	i.show()
+	"""

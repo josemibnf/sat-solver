@@ -6,7 +6,7 @@ class Interpretation:
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
 	
-	def davis(self):
+	def davis_putman(self):
 		def get_var_clauses(v):
 			print("Obteniendo el var_clauses de la varialbe ",v, "  en ", self.clauses)
 			var_clauses = []
@@ -48,7 +48,8 @@ class Interpretation:
 			except ValueError:
 				pass
 			print("Nos sacamos las dos clausulas, ", self.clauses)
-			self.clauses.append(c1+c2)
+			if c1 != [] or c2 != []:
+				self.clauses.append(c1+c2)
 			print("Y al final nos queda .. ",self.clauses)
 		for v in range(1,self.n_vars+1):
 			var_clauses = get_var_clauses(v)
@@ -113,7 +114,7 @@ if __name__ == "__main__":
 	i = Interpretation(5, [[1,-2],[2,3,-4],[5,-5]])
 	i.vars=[None, True, None, None, None, False]
 	i.show()
-	i.davis()
+	i.davis_putman()
 	i.show()
 	"""
 	i.simplify()

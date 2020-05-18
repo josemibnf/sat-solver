@@ -23,25 +23,47 @@ class Interpretation:
 			print("Saco ", var_clauses," de la  variable ",v," de ",self.clauses,"\n")
 			return var_clauses
 		def fusion( v, i1, i2):
+			def s(bool):
+				if bool:
+					return v
+				else:
+					return -v
 			#Toma dos indices de clausulas y las fusiona quitando el literal v, y lo añade.
-			c1 = self.clauses[i1].remove(v)
-			c2 = self.clauses[i2].remove(v)
-			self.clauses.remove(c1)
-			self.clauses.remove(c2)
+			print(" --- Fusion ----")
+			print(" Tenemos las clausulas ",self.clauses,"  y la variable es ", v)
+			print("Elimina de la clausula ",i1[0]," el elemento ",s(i1[1]))
+			self.clauses[i1[0]].remove(s(i1[1]))
+			c1 = self.clauses[i1[0]]
+			print(" Queda tal que asi ",self.clauses)
+			print("Elimina de la clausula ",i2[0]," el elemento ",s(i2[1]))
+			self.clauses[i2[0]].remove(s(i2[1]))
+			c2 = self.clauses[i2[0]]
+			print(" Queda tal que asi ",self.clauses, " he almacenado las clausulas c1: ",c1," y la c2: ",c2)
+			try:
+				self.clauses.remove(c1)
+			except ValueError:
+				pass
+			try:
+				self.clauses.remove(c2)
+			except ValueError:
+				pass
+			print("Nos sacamos las dos clausulas, ", self.clauses)
 			self.clauses.append(c1+c2)
+			print("Y al final nos queda .. ",self.clauses)
 		for v in range(1,self.n_vars+1):
 			var_clauses = get_var_clauses(v)
 			while len(var_clauses)>1:
 				contrario = None
 				for c in var_clauses[1:]:
-					if c>0 and var_clauses[0]<0 :
+					if c[1]==True and var_clauses[0][1]==False :
 						contrario = c
-					elif c>0 and var_clauses[0]<0 :
+					elif c[1]==False and var_clauses[0][1]==True :
 						contrario = c
 				if contrario==None:
-					break # Son todas del mismo signo, no hay nada que fusionar.
+					print(" Son todas del mismo signo, no hay nada que fusionar. ")
+					break
 				else:
-					fusion( v, var_clauses[0], var_clauses[contrario])
+					fusion( v, var_clauses[0], contrario)
 					var_clauses = get_var_clauses(v)
 				
 

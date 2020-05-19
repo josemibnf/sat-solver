@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #######################################################################
 # Copyright 2016 Josep Argelich
 
@@ -26,22 +26,45 @@ import time
 
 # Functions
 
-def receive_alarm(signum, stack):
-	pc = 0
-	pcv = 50.0
-	for v in curr_sol.vars[1:16]:
-		if v == None:
-			break
-		elif v == 1:
-			pc += pcv
-		pcv = pcv / 2
-	sys.stdout.write('\rc Searching %0.2f%%...' % pc)
-	sys.stdout.flush()
-	signal.alarm(3)
+def unit_propagation(formula):
+	unit_clauses = []
+	resulting_formula = formula.copy()
 
-signal.signal(signal.SIGALRM, receive_alarm)
+	# Get all unit clauses
+	for clause in formula:
+		if len(clause) == 1:
+			unit_clauses += clause
 
-# Classes 
+	# Propagate unit clauses
+	for clause in formula:
+		for literal in unit_clauses:
+			# Every clause (other than the unit clause itself) containing l is removed (the clause is satisfied if l is)
+			if len(clause) > 1 and literal in clause:
+				if clause in resulting_formula:
+					# print(clause, " remove because we have ",literal)
+					resulting_formula.remove(clause)
+
+			# In every clause that contains -l this literal is deleted (-l can not contribute to it being satisfied)
+			flip_literal = literal * -1
+			if flip_literal in clause:
+				if clause in resulting_formula:
+					# print(clause, " change to", [x for x in clause if x != flip_literal], "because we have",literal)
+					resulting_formula.remove(clause)
+					resulting_formula.append([x for x in clause if x != flip_literal])
+
+	# Keep simplifying the formula as long as new unit clauses exist
+	if resulting_formula != formula:
+		return unit_propagation(resulting_formula)
+
+	return resulting_formula
+
+def pure_literal_rule(self):
+	pass
+
+def dpll(self):
+	pass
+
+# Classes
 
 class CNF():
 	"""A CNF formula """
@@ -139,8 +162,14 @@ class Solver():
 		"""
 		Implements an algorithm to solve the instance of a problem
 		"""
-		#global curr_sol # For signal
-		#signal.alarm(1) # Call receive_alarm in 1 seconds
+
+		formula = self.cnf.clauses
+		print("Initial formula: ",formula)
+		formula = unit_propagation(formula)
+		print("After unit propagation:",formula)
+
+		return Interpretation(self.cnf.num_vars)
+		"""
 		curr_sol = Interpretation(self.cnf.num_vars)
 		var = 1
 		while var > 0:
@@ -158,6 +187,7 @@ class Solver():
 				else: # Undet
 					var = var + 1
 		return curr_sol
+		"""
 
 # Main
 
@@ -169,7 +199,7 @@ if __name__ == '__main__' :
 	# Check parameters
 	if len(sys.argv) < 1 or len(sys.argv) > 2:
 		sys.exit("Use: %s <cnf_instance>" % sys.argv[0])
-	
+
 	if os.path.isfile(sys.argv[1]):
 		cnf_file_name = os.path.abspath(sys.argv[1])
 	else:

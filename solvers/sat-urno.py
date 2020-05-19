@@ -26,8 +26,37 @@ import time
 
 # Functions
 
-def unit_propagation(self):
-	pass
+def unit_propagation(self, formula):
+	resulting_formula = formula.copy()
+	unit_clauses = []
+
+	print("Formula = ",resulting_formula,"\n")
+
+	# Get all unit clauses
+	for clause in formula:
+		if len(clause) == 1:
+			unit_clauses += clause
+
+	# Propagate unit clauses
+	for clause in formula:
+		for literal in unit_clauses:
+			# Every clause (other than the unit clause itself) containing l is removed (the clause is satisfied if l is)
+			if len(clause) > 1 and literal in clause:
+				if clause in resulting_formula:
+					print(clause, " remove because we have ",literal)
+					resulting_formula.remove(clause)
+
+			# In every clause that contains -l this literal is deleted (-l can not contribute to it being satisfied)
+			flip_literal = literal * -1
+			if flip_literal in clause:
+				if clause in resulting_formula:
+					print(clause, " change to", [x for x in clause if x != flip_literal], "because we have",literal)
+					resulting_formula.remove(clause)
+					resulting_formula.append([x for x in clause if x != flip_literal])
+
+	print("\nResult = ",resulting_formula)
+	print("Expected = [3], [-3,4], [1]")
+	return resulting_formula
 
 def pure_literal_rule(self):
 	pass
@@ -134,6 +163,10 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 
+		formula = self.cnf.clauses
+		unit_clauses = unit_propagation(self, formula)
+		return Interpretation(self.cnf.num_vars)
+		"""
 		curr_sol = Interpretation(self.cnf.num_vars)
 		var = 1
 		while var > 0:
@@ -151,6 +184,7 @@ class Solver():
 				else: # Undet
 					var = var + 1
 		return curr_sol
+		"""
 
 # Main
 

@@ -26,11 +26,9 @@ import time
 
 # Functions
 
-def unit_propagation(self, formula):
-	resulting_formula = formula.copy()
+def unit_propagation(formula):
 	unit_clauses = []
-
-	print("Formula = ",resulting_formula,"\n")
+	resulting_formula = formula.copy()
 
 	# Get all unit clauses
 	for clause in formula:
@@ -43,19 +41,21 @@ def unit_propagation(self, formula):
 			# Every clause (other than the unit clause itself) containing l is removed (the clause is satisfied if l is)
 			if len(clause) > 1 and literal in clause:
 				if clause in resulting_formula:
-					print(clause, " remove because we have ",literal)
+					# print(clause, " remove because we have ",literal)
 					resulting_formula.remove(clause)
 
 			# In every clause that contains -l this literal is deleted (-l can not contribute to it being satisfied)
 			flip_literal = literal * -1
 			if flip_literal in clause:
 				if clause in resulting_formula:
-					print(clause, " change to", [x for x in clause if x != flip_literal], "because we have",literal)
+					# print(clause, " change to", [x for x in clause if x != flip_literal], "because we have",literal)
 					resulting_formula.remove(clause)
 					resulting_formula.append([x for x in clause if x != flip_literal])
 
-	print("\nResult = ",resulting_formula)
-	print("Expected = [3], [-3,4], [1]")
+	# Keep simplifying the formula as long as new unit clauses exist
+	if resulting_formula != formula:
+		return unit_propagation(resulting_formula)
+
 	return resulting_formula
 
 def pure_literal_rule(self):
@@ -164,7 +164,10 @@ class Solver():
 		"""
 
 		formula = self.cnf.clauses
-		unit_clauses = unit_propagation(self, formula)
+		print("Initial formula: ",formula)
+		formula = unit_propagation(formula)
+		print("After unit propagation:",formula)
+
 		return Interpretation(self.cnf.num_vars)
 		"""
 		curr_sol = Interpretation(self.cnf.num_vars)

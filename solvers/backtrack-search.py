@@ -116,9 +116,7 @@ if __name__ == "__main__":
 	i.show()
 	i.davis_putman()
 	i.show()
-	"""
 	i.simplify()
 	i.show()
 	i.check_unit()
 	i.show()
-	"""

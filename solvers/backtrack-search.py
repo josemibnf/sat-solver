@@ -109,6 +109,9 @@ class Interpretation:
 					print("ESTA INTERPRETACION NO ME VALE")
 					exit()
 
+	def cost(self):
+		pass
+
 	def show(self):
 		print("-----")
 		print(self.clauses)
@@ -144,7 +147,7 @@ class Solver():
 			else: # Extend right branch
 				curr_sol.vars[var] = 1
 			if curr_sol.cost() == 0: # Undet or SAT
-				if var == self.cnf.num_vars: # SAT
+				if var == self.num_vars: # SAT
 					return curr_sol
 				else: # Undet
 					var = var + 1

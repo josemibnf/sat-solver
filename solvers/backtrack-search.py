@@ -153,8 +153,24 @@ class Solver():
 					var = var + 1
 		return curr_sol
 
-def get_cnf(file):
-	return 5, [[]]
+def parse(file):
+    clauses = []
+    count = 0
+    for line in open(file):
+        if line[0] == 'c':
+            continue
+        if line[0] == 'p':
+            n_vars = int(line.split()[2])
+            lit_clause = [[] for _ in range(n_vars * 2 + 1)]
+            continue
+        clause = []
+        for literal in line[:-2].split():
+            literal = int(literal)
+            clause.append(literal)
+            lit_clause[literal].append(count)
+        clauses.append(clause)
+        count += 1
+    return n_vars, clauses
 
 if __name__ == '__main__' :
 
@@ -168,7 +184,11 @@ if __name__ == '__main__' :
 		sys.exit("ERROR: CNF instance not found (%s)." % sys.argv[1])
 
 	# Read cnf instance
-	num_vars, clauses = get_cnf(cnf_file_name)
+	num_vars, clauses = parse(cnf_file_name)
+
+	print(num_vars)
+	print(clauses)
+	exit()
 	# Create a solver instance with the problem to solve
 	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found

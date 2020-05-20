@@ -5,7 +5,7 @@ class Interpretation:
 		self.n_vars = n_vars
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
-	
+
 	def davis_putman(self):
 		def get_var_clauses(v):
 			print("Obteniendo el var_clauses de la varialbe ",v, "  en ", self.clauses)
@@ -65,8 +65,7 @@ class Interpretation:
 					break
 				else:
 					fusion( v, var_clauses[0], contrario)
-					var_clauses = get_var_clauses(v)
-				
+					var_clauses = get_var_clauses(v)			
 
 	def simplify(self):
 		def value(l):
@@ -77,9 +76,13 @@ class Interpretation:
 		for c in self.clauses:
 			for l in c:
 				if ( value(l) == False and l <0 ) :
-					c.remove(l)
+					self.clauses.remove(c)
 				elif ( value(l) == True and l >0 ) :
 					self.clauses.remove(c)
+				elif ( value(l) == True and l <0 ) :
+					c.remove(l)
+				elif ( value(l) == False and l >0 ) :
+					c.remove(l)
 
 	def check_unit(self):
 		def get_value(c):
@@ -109,14 +112,61 @@ class Interpretation:
 		print(self.vars)
 		print("-------")
 
+class Solver():
+	"""The class Solver implements an algorithm to solve a given problem instance"""
 
-if __name__ == "__main__":
-	i = Interpretation(5, [[1,-2],[2,3,-4],[5,-5]])
-	i.vars=[None, True, None, None, None, False]
-	i.show()
-	i.davis_putman()
-	i.show()
-	i.simplify()
-	i.show()
-	i.check_unit()
-	i.show()
+	def __init__(self, cnf):
+		"""
+		Initialization
+		TODO
+		"""
+		self.cnf = cnf
+		self.best_sol = None
+		self.best_cost = cnf.num_clauses + 1
+
+	def solve(self):
+		"""
+		Implements an algorithm to solve the instance of a problem
+		"""
+		#global curr_sol # For signal
+		#signal.alarm(1) # Call receive_alarm in 1 seconds
+		curr_sol = Interpretation(self.cnf.num_vars)
+		var = 1
+		while var > 0:
+			if curr_sol.vars[var] == 1: # Backtrack
+				curr_sol.vars[var] = None
+				var = var - 1
+				continue
+			if curr_sol.vars[var] == None: # Extend left branch
+				curr_sol.vars[var] = 0
+			else: # Extend right branch
+				curr_sol.vars[var] = 1
+			if curr_sol.cost() == 0: # Undet or SAT
+				if var == self.cnf.num_vars: # SAT
+					return curr_sol
+				else: # Undet
+					var = var + 1
+		return curr_sol
+
+if __name__ == '__main__' :
+	"""
+	TODO
+	"""
+
+	# Check parameters
+	if len(sys.argv) < 1 or len(sys.argv) > 2:
+		sys.exit("Use: %s <cnf_instance>" % sys.argv[0])
+	
+	if os.path.isfile(sys.argv[1]):
+		cnf_file_name = os.path.abspath(sys.argv[1])
+	else:
+		sys.exit("ERROR: CNF instance not found (%s)." % sys.argv[1])
+
+	# Read cnf instance
+	cnf = CNF(cnf_file_name)
+	# Create a solver instance with the problem to solve
+	solver = Solver(cnf)
+	# Solve the problem and get the best solution found
+	best_sol = solver.solve()
+	# Show the best solution found
+	best_sol.show()

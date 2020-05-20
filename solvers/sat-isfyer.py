@@ -152,17 +152,10 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 		def rec(interpretation):
-			maybe_satisfiable = True
 			interpretation.show()
 			interpretation.davis_putman()
 			interpretation.simplify()
-			maybe_satisfiable = interpretation.check_unit()
-			if maybe_satisfiable:
-				return False
-			elif interpretation.is_complete():
-				return True
-			else:
-				return rec( interpretation.next_varT() )
+			interpretation.check_unit()
 		interpretation = Interpretation(self.num_vars, self.clauses)
 		return rec(interpretation)
 

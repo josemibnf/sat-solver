@@ -135,7 +135,9 @@ class Interpretation:
 		return True
 
 	def check_if_satisfiable(self):
-		pass
+		#Si no es completo retornará False
+		print(self.clauses[[]])
+		return self.clauses==[[]]
 
 	def show(self):
 		print("-----")

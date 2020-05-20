@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+import sys
+import os
+
 class Interpretation:
 	def __init__(self, n_vars, clauses):
 		self.n_vars = n_vars
@@ -115,14 +118,14 @@ class Interpretation:
 class Solver():
 	"""The class Solver implements an algorithm to solve a given problem instance"""
 
-	def __init__(self, cnf):
+	def __init__(self, num_vars, clauses):
 		"""
 		Initialization
 		TODO
 		"""
-		self.cnf = cnf
+		self.cnf = clauses
 		self.best_sol = None
-		self.best_cost = cnf.num_clauses + 1
+		self.best_cost = clauses.num_clauses + 1
 
 	def solve(self):
 		"""
@@ -130,7 +133,7 @@ class Solver():
 		"""
 		#global curr_sol # For signal
 		#signal.alarm(1) # Call receive_alarm in 1 seconds
-		curr_sol = Interpretation(self.cnf.num_vars)
+		curr_sol = Interpretation(self.cnf.num_vars, cnf)
 		var = 1
 		while var > 0:
 			if curr_sol.vars[var] == 1: # Backtrack
@@ -148,10 +151,10 @@ class Solver():
 					var = var + 1
 		return curr_sol
 
+def get_cnf(file):
+	return 5, [[]]
+
 if __name__ == '__main__' :
-	"""
-	TODO
-	"""
 
 	# Check parameters
 	if len(sys.argv) < 1 or len(sys.argv) > 2:
@@ -163,9 +166,9 @@ if __name__ == '__main__' :
 		sys.exit("ERROR: CNF instance not found (%s)." % sys.argv[1])
 
 	# Read cnf instance
-	cnf = CNF(cnf_file_name)
+	num_vars, clauses = get_cnf(cnf_file_name)
 	# Create a solver instance with the problem to solve
-	solver = Solver(cnf)
+	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found
 	best_sol = solver.solve()
 	# Show the best solution found

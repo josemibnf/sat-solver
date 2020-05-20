@@ -107,7 +107,7 @@ class Interpretation:
 					self.clauses.remove(c)
 				else:
 					print("ESTA INTERPRETACION NO ME VALE")
-					exit()
+					return False
 
 	def cost(self):
 		pass
@@ -116,15 +116,17 @@ class Interpretation:
 		for i, v in enumerate(self.vars):
 			if v==None:
 				self.vars[i]=True
-				break
-		return self
+				return self
+		print("ESTA INTERPRETACION NO ME VALE")
+		return False
 
 	def next_varF(self):
 		for i, v in enumerate(self.vars):
 			if v==None:
 				self.vars[i]=True
-				break
-		return self
+				return self
+		print("ESTA INTERPRETACION NO ME VALE")
+		return False
 	
 	def show(self):
 		print("-----")
@@ -143,10 +145,15 @@ class Solver():
 		"""
 		Implements an algorithm to solve the instance of a problem
 		"""
+		def rec(interpretation):
+			interpretation.show()
+			interpretation.davis_putman()
+			interpretation.simplify()
+			interpretation.check_unit()
+			return rec(interpretation.next_varT())
 		interpretation = Interpretation(self.num_vars, self.clauses)
+		return rec(interpretation)
 		
-		
-
 def parse(file):
     clauses = []
     count = 0

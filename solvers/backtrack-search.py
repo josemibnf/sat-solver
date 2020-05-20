@@ -77,15 +77,19 @@ class Interpretation:
 			else:
 				return self.vars[l]
 		for c in self.clauses:
-			for l in c:
-				if ( value(l) == False and l <0 ) :
-					self.clauses.remove(c)
-				elif ( value(l) == True and l >0 ) :
-					self.clauses.remove(c)
-				elif ( value(l) == True and l <0 ) :
-					c.remove(l)
-				elif ( value(l) == False and l >0 ) :
-					c.remove(l)
+			try:
+				for l in c:
+					self.show()
+					if ( value(l) == False and l <0 ) :
+						self.clauses.remove(c)
+					elif ( value(l) == True and l >0 ) :
+						self.clauses.remove(c)
+					elif ( value(l) == True and l <0 ) :
+						c.remove(l)
+					elif ( value(l) == False and l >0 ) :
+						c.remove(l)
+			except ValueError:
+				print("Ya no tenemos la clausula.")
 
 	def check_unit(self):
 		def get_value(c):

@@ -134,6 +134,9 @@ class Interpretation:
 				return False
 		return True
 
+	def check_insatisfiable(self):
+		return False
+
 	def show(self):
 		print("-----")
 		print(self.clauses)
@@ -152,10 +155,18 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 		def rec(interpretation):
+			maybe_satisfiable = True
 			interpretation.show()
 			interpretation.davis_putman()
 			interpretation.simplify()
-			interpretation.check_unit()
+			maybe_satisfiable = interpretation.check_unit()
+			maybe_satisfiable = interpretation.check_insatisfiable()
+			if maybe_satisfiable==False:
+				return False
+			elif interpretation.is_complete():
+				return True
+			else:
+				return rec( interpretation.next_varT() )
 		interpretation = Interpretation(self.num_vars, self.clauses)
 		return rec(interpretation)
 

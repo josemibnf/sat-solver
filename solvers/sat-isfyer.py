@@ -159,10 +159,13 @@ class Solver():
 		"""
 		def rec(interpretation):
 			maybe_satisfiable = True
-			interpretation.show()
-			interpretation.davis_putman()
-			maybe_satisfiable = interpretation.simplify()
-			maybe_satisfiable = interpretation.check_unit()
+			try:
+				interpretation.show()
+				interpretation.davis_putman()
+				maybe_satisfiable = interpretation.simplify()
+				maybe_satisfiable = interpretation.check_unit()
+			except AttributeError:
+				maybe_satisfiable = False
 			if maybe_satisfiable==False:
 				return False
 			elif interpretation.is_complete():

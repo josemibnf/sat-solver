@@ -167,7 +167,7 @@ class Solver():
 			elif interpretation.is_complete():
 				return interpretation.check_if_satisfiable()
 			else:
-				return rec( interpretation.next_varT() or interpretation.next_varF() )
+				return rec(interpretation.next_varT()) or rec(interpretation.next_varF())
 		interpretation = Interpretation(self.num_vars, self.clauses)
 		return rec(interpretation)
 

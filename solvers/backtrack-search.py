@@ -123,7 +123,8 @@ class Solver():
 		Initialization
 		TODO
 		"""
-		self.cnf = clauses
+		self.clauses = clauses
+		self.num_vars = num_vars
 		self.best_sol = None
 		self.best_cost = clauses.num_clauses + 1
 
@@ -131,9 +132,7 @@ class Solver():
 		"""
 		Implements an algorithm to solve the instance of a problem
 		"""
-		#global curr_sol # For signal
-		#signal.alarm(1) # Call receive_alarm in 1 seconds
-		curr_sol = Interpretation(self.cnf.num_vars, cnf)
+		curr_sol = Interpretation(self.num_vars, self.clauses)
 		var = 1
 		while var > 0:
 			if curr_sol.vars[var] == 1: # Backtrack

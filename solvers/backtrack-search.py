@@ -116,9 +116,14 @@ class Interpretation:
 		for i, v in enumerate(self.vars):
 			if v==None:
 				self.vars[i]=True
+				break
 		return self
 
 	def next_varF(self):
+		for i, v in enumerate(self.vars):
+			if v==None:
+				self.vars[i]=True
+				break
 		return self
 	
 	def show(self):
@@ -139,9 +144,7 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 		interpretation = Interpretation(self.num_vars, self.clauses)
-		interpretation.show()
-		interpretation = interpretation.next_varT()
-		interpretation.show()
+		
 		
 
 def parse(file):

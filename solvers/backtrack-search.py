@@ -112,6 +112,12 @@ class Interpretation:
 	def cost(self):
 		pass
 
+	def next_varT(self):
+		pass
+
+	def next_varF(self):
+		pass
+	
 	def show(self):
 		print("-----")
 		print(self.clauses)
@@ -122,10 +128,6 @@ class Solver():
 	"""The class Solver implements an algorithm to solve a given problem instance"""
 
 	def __init__(self, num_vars, clauses):
-		"""
-		Initialization
-		TODO
-		"""
 		self.clauses = clauses
 		self.num_vars = num_vars
 		self.best_sol = None
@@ -135,23 +137,10 @@ class Solver():
 		"""
 		Implements an algorithm to solve the instance of a problem
 		"""
-		curr_sol = Interpretation(self.num_vars, self.clauses)
-		var = 1
-		while var > 0:
-			if curr_sol.vars[var] == 1: # Backtrack
-				curr_sol.vars[var] = None
-				var = var - 1
-				continue
-			if curr_sol.vars[var] == None: # Extend left branch
-				curr_sol.vars[var] = 0
-			else: # Extend right branch
-				curr_sol.vars[var] = 1
-			if curr_sol.cost() == 0: # Undet or SAT
-				if var == self.num_vars: # SAT
-					return curr_sol
-				else: # Undet
-					var = var + 1
-		return curr_sol
+		def resolve(interpretation):
+			pass
+		resolve(Interpretation(self.num_vars, self.clauses))
+		
 
 def parse(file):
     clauses = []
@@ -185,10 +174,6 @@ if __name__ == '__main__' :
 
 	# Read cnf instance
 	num_vars, clauses = parse(cnf_file_name)
-
-	print(num_vars)
-	print(clauses)
-	exit()
 	# Create a solver instance with the problem to solve
 	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found

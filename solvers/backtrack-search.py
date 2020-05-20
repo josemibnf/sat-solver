@@ -121,17 +121,19 @@ class Interpretation:
 			if v==None:
 				self.vars[i]=True
 				return self
-		print("ESTA INTERPRETACION NO ME VALE")
-		return False
 
 	def next_varF(self):
 		for i, v in enumerate(self.vars):
 			if v==None:
-				self.vars[i]=True
+				self.vars[i]=False
 				return self
-		print("ESTA INTERPRETACION NO ME VALE")
-		return False
 	
+	def is_complete(self):
+		for v in self.vars:
+			if v == None:
+				return False
+		return True
+
 	def show(self):
 		print("-----")
 		print(self.clauses)
@@ -150,14 +152,20 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 		def rec(interpretation):
+			maybe_satisfiable = True
 			interpretation.show()
 			interpretation.davis_putman()
 			interpretation.simplify()
-			interpretation.check_unit()
-			return rec(interpretation.next_varT())
+			maybe_satisfiable = interpretation.check_unit()
+			if maybe_satisfiable:
+				return False
+			elif interpretation.is_complete():
+				return True
+			else:
+				return rec( interpretation.next_varT() )
 		interpretation = Interpretation(self.num_vars, self.clauses)
 		return rec(interpretation)
-		
+
 def parse(file):
     clauses = []
     count = 0
@@ -178,11 +186,10 @@ def parse(file):
     return n_vars, clauses
 
 if __name__ == '__main__' :
-
 	# Check parameters
 	if len(sys.argv) < 1 or len(sys.argv) > 2:
 		sys.exit("Use: %s <cnf_instance>" % sys.argv[0])
-	
+
 	if os.path.isfile(sys.argv[1]):
 		cnf_file_name = os.path.abspath(sys.argv[1])
 	else:

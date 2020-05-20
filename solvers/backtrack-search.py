@@ -113,10 +113,13 @@ class Interpretation:
 		pass
 
 	def next_varT(self):
-		pass
+		for i, v in enumerate(self.vars):
+			if v==None:
+				self.vars[i]=True
+		return self
 
 	def next_varF(self):
-		pass
+		return self
 	
 	def show(self):
 		print("-----")
@@ -130,16 +133,15 @@ class Solver():
 	def __init__(self, num_vars, clauses):
 		self.clauses = clauses
 		self.num_vars = num_vars
-		self.best_sol = None
-		self.best_cost = clauses.num_clauses + 1
 
 	def solve(self):
 		"""
 		Implements an algorithm to solve the instance of a problem
 		"""
-		def resolve(interpretation):
-			pass
-		resolve(Interpretation(self.num_vars, self.clauses))
+		interpretation = Interpretation(self.num_vars, self.clauses)
+		interpretation.show()
+		interpretation = interpretation.next_varT()
+		interpretation.show()
 		
 
 def parse(file):
@@ -177,6 +179,6 @@ if __name__ == '__main__' :
 	# Create a solver instance with the problem to solve
 	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found
-	best_sol = solver.solve()
+	solver.solve()
 	# Show the best solution found
-	best_sol.show()
+	#best_sol.show()

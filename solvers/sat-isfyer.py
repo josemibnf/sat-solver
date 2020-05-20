@@ -134,8 +134,8 @@ class Interpretation:
 				return False
 		return True
 
-	def check_insatisfiable(self):
-		return False
+	def check_if_satisfiable(self):
+		pass
 
 	def show(self):
 		print("-----")
@@ -160,13 +160,12 @@ class Solver():
 			interpretation.davis_putman()
 			interpretation.simplify()
 			maybe_satisfiable = interpretation.check_unit()
-			maybe_satisfiable = interpretation.check_insatisfiable()
 			if maybe_satisfiable==False:
 				return False
 			elif interpretation.is_complete():
-				return True
+				return interpretation.check_if_satisfiable()
 			else:
-				return rec( interpretation.next_varT() )
+				return rec( interpretation.next_varT() or interpretation.next_varF() )
 		interpretation = Interpretation(self.num_vars, self.clauses)
 		return rec(interpretation)
 

@@ -163,13 +163,8 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 
-		formula = self.cnf.clauses
-		print("Initial formula: ",formula)
-		formula = unit_propagation(formula)
-		print("After unit propagation:",formula)
+		self.cnf.clauses = unit_propagation(self.cnf.clauses)
 
-		return Interpretation(self.cnf.num_vars)
-		"""
 		curr_sol = Interpretation(self.cnf.num_vars)
 		var = 1
 		while var > 0:
@@ -187,7 +182,7 @@ class Solver():
 				else: # Undet
 					var = var + 1
 		return curr_sol
-		"""
+
 
 # Main
 

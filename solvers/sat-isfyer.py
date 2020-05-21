@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import sys
 import os
@@ -53,7 +53,7 @@ class Interpretation:
 					break
 				else:
 					fusion( v, var_clauses[0], contrario)
-					var_clauses = get_var_clauses(v)			
+					var_clauses = get_var_clauses(v)
 
 	def simplify(self):
 		def has_value(l):
@@ -110,7 +110,7 @@ class Interpretation:
 				nexti.vars = list(self.vars)
 				nexti.vars[i]=False
 				return nexti
-	
+
 	def is_complete(self):
 		for v in self.vars[1:]:
 			if v == None:
@@ -137,7 +137,7 @@ class Interpretation:
 				return False
 		print("bueno pues ya esta, es satisfactible, si.")
 		return True
-        
+
 	def show(self):
 		print("\n-----")
 		print(self)
@@ -145,7 +145,7 @@ class Interpretation:
 		print(self.vars)
 
 class Solver():
-	
+
 	def __init__(self, num_vars, clauses):
 		self.clauses = clauses
 		self.num_vars = num_vars

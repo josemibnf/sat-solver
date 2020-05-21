@@ -10,6 +10,51 @@ class Interpretation:
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
 
+	def davis_putman(self):
+		def get_var_clauses(v):
+			var_clauses = []
+			for c in self.clauses:
+				for l in c:
+					if l==v :
+						var_clauses.append((self.clauses.index(c),True)) #Is positive
+					elif -l==v :
+						var_clauses.append((self.clauses.index(c),False)) #Is not positive
+			return var_clauses
+		def fusion( v, i1, i2):
+			def s(bool):
+				if bool:
+					return v
+				else:
+					return -v
+			self.clauses[i1[0]].remove(s(i1[1]))
+			c1 = self.clauses[i1[0]]
+			self.clauses[i2[0]].remove(s(i2[1]))
+			c2 = self.clauses[i2[0]]
+			try:
+				self.clauses.remove(c1)
+			except ValueError:
+				pass
+			try:
+				self.clauses.remove(c2)
+			except ValueError:
+				pass
+			if c1 != [] or c2 != []:
+				self.clauses.append(c1+c2)
+		for v in range(1,self.n_vars):
+			var_clauses = get_var_clauses(v)
+			while len(var_clauses)>1:
+				contrario = None
+				for c in var_clauses[1:]:
+					if c[1]==True and var_clauses[0][1]==False :
+						contrario = c
+					elif c[1]==False and var_clauses[0][1]==True :
+						contrario = c
+				if contrario==None:
+					break
+				else:
+					fusion( v, var_clauses[0], contrario)
+					var_clauses = get_var_clauses(v)			
+
 	def next_varT(self):
 		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
 		for i in range(1, len(self.vars)):
@@ -66,8 +111,10 @@ class Solver():
 		self.num_vars = num_vars
 
 	def solve(self):
-	
 		def rec(interpretation):
+			print("\n\n****************************\n")
+			interpretation.show()
+			interpretation.davis_putman()
 			interpretation.show()
 			if interpretation.is_complete():
 				print("isComplete.")

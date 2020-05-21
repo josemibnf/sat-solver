@@ -27,10 +27,16 @@ class Interpretation:
 				return False
 		return True
 
+	def check_if_clause_is_satisfiable(self, clause):
+		pass
+
 	def check_if_satisfiable(self):
 		#Si no es completo retornará False
-		print(self.clauses)
-		return self.clauses==[]
+		for c in self.clauses:
+			if check_if_clause_is_satisfiable(c)==False:
+				return False
+		return True
+        
 
 	def show(self):
 		print("-----")

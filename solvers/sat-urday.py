@@ -10,13 +10,13 @@ class Interpretation:
 		self.clauses = clauses
 
 	def next_varT(self):
-		for i, v in enumerate(self.vars):
+		for i, v in enumerate(self.vars[1:]):
 			if v==None:
 				self.vars[i]=True
 				return self
 
 	def next_varF(self):
-		for i, v in enumerate(self.vars):
+		for i, v in enumerate(self.vars[1:]):
 			if v==None:
 				self.vars[i]=False
 				return self
@@ -65,17 +65,7 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 		def rec(interpretation):
-			maybe_satisfiable = True
-			try:
-				interpretation.show()
-				interpretation.davis_putman()
-				interpretation.simplify()
-				maybe_satisfiable = interpretation.check_unit()
-			except AttributeError:
-				print("AtrtibuteError. Ya hemos quitado todas las clausulas que se cumplian.")
-			if maybe_satisfiable==False:
-				return False
-			elif interpretation.is_complete():
+			if interpretation.is_complete():
 				return interpretation.check_if_satisfiable()
 			else:
 				return rec(interpretation.next_varT()) or rec(interpretation.next_varF())

@@ -137,7 +137,7 @@ class Interpretation:
 	def check_if_satisfiable(self):
 		#Si no es completo retornará False
 		print(self.clauses)
-		return self.clauses==[[]]
+		return self.clauses==[]
 
 	def show(self):
 		print("-----")
@@ -161,10 +161,10 @@ class Solver():
 			try:
 				interpretation.show()
 				interpretation.davis_putman()
-				maybe_satisfiable = interpretation.simplify()
+				interpretation.simplify()
 				maybe_satisfiable = interpretation.check_unit()
 			except AttributeError:
-				maybe_satisfiable = False
+				print("AtrtibuteError. Ya hemos quitado todas las clausulas que se cumplian.")
 			if maybe_satisfiable==False:
 				return False
 			elif interpretation.is_complete():

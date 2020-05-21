@@ -2,6 +2,7 @@
 
 import sys
 import os
+import copy
 
 class Interpretation:
 	def __init__(self, n_vars, clauses):
@@ -10,18 +11,18 @@ class Interpretation:
 		self.clauses = clauses
 
 	def next_varT(self):
-		nexti = Interpretation(self.n_vars, self.clauses)
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
-				nexti.vars = self.vars
+				nexti.vars = copy.deepcopy(self.vars)
 				nexti.vars[i]=True
 				return nexti
 
 	def next_varF(self):
-		nexti = Interpretation(self.n_vars, self.clauses)
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
-				nexti.vars = self.vars
+				nexti.vars = copy.deepcopy(self.vars)
 				nexti.vars[i]=False
 				return nexti
 	
@@ -54,6 +55,7 @@ class Interpretation:
         
 	def show(self):
 		print("\n-----")
+		print(self)
 		print(self.clauses)
 		print(self.vars)
 
@@ -71,7 +73,15 @@ class Solver():
 				print("isComplete.")
 				return interpretation.check_if_satisfiable()
 			else:
-				return rec(interpretation.next_varT()) or rec(interpretation.next_varF())
+				is_T_sat = rec(interpretation.next_varT())
+				print(is_T_sat)
+				interpretation.show()
+				print("Voy ha hacer la rama F")
+				is_F_sat = rec(interpretation.next_varF())
+				if is_T_sat or is_F_sat:
+					return True
+				else:
+					return False
 		interpretation = Interpretation(self.num_vars, self.clauses)
 		return rec(interpretation)
 

@@ -165,7 +165,7 @@ class Solver():
 				maybe_satisfiable = interpretation.check_unit()
 			except AttributeError:
 				print("AtrtibuteError.")
-				maybe_satisfiable = False
+				return True #Ya hemos quitado todas las clausulas que se cumplian.
 			if maybe_satisfiable==False:
 				return False
 			elif interpretation.is_complete():

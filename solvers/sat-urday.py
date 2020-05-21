@@ -90,7 +90,6 @@ class Interpretation:
 						c.remove(l)
 			except ValueError:
 				print("Ya no tenemos la clausula.")
-				print False
 
 	def check_unit(self):
 		def get_value(c):
@@ -158,15 +157,18 @@ class Solver():
 		Implements an algorithm to solve the instance of a problem
 		"""
 		def rec(interpretation):
-			if interpretation.is_complete():
-				return interpretation.check_if_satisfiable()
 			maybe_satisfiable = True
-			interpretation.show()
-			interpretation.davis_putman()
-			maybe_satisfiable=interpretation.simplify()
-			maybe_satisfiable = interpretation.check_unit()
+			try:
+				interpretation.show()
+				interpretation.davis_putman()
+				maybe_satisfiable = interpretation.simplify()
+				maybe_satisfiable = interpretation.check_unit()
+			except AttributeError:
+				maybe_satisfiable = False
 			if maybe_satisfiable==False:
 				return False
+			elif interpretation.is_complete():
+				return interpretation.check_if_satisfiable()
 			else:
 				return rec(interpretation.next_varT()) or rec(interpretation.next_varF())
 		interpretation = Interpretation(self.num_vars, self.clauses)

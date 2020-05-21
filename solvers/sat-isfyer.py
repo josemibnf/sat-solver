@@ -90,7 +90,6 @@ class Interpretation:
 						c.remove(l)
 			except ValueError:
 				print("Ya no tenemos la clausula.")
-				return False
 
 	def check_unit(self):
 		def get_value(c):

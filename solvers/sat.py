@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #######################################################################
 # Copyright 2016 Josep Argelich
 
@@ -41,7 +41,7 @@ def receive_alarm(signum, stack):
 
 signal.signal(signal.SIGALRM, receive_alarm)
 
-# Classes 
+# Classes
 
 class CNF():
 	"""A CNF formula """
@@ -169,7 +169,7 @@ if __name__ == '__main__' :
 	# Check parameters
 	if len(sys.argv) < 1 or len(sys.argv) > 2:
 		sys.exit("Use: %s <cnf_instance>" % sys.argv[0])
-	
+
 	if os.path.isfile(sys.argv[1]):
 		cnf_file_name = os.path.abspath(sys.argv[1])
 	else:

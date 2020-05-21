@@ -55,6 +55,23 @@ class Interpretation:
 					fusion( v, var_clauses[0], contrario)
 					var_clauses = get_var_clauses(v)			
 
+	def simplify(self):
+		def has_value(l):
+			if l < 0:
+				return self.vars[-l]!=None
+			else:
+				return self.vars[l]!=None
+		for c in self.clauses:
+			try:
+				for l in c:
+					if has_value(l):
+						if self.chekc_if_literal_is_satisfiable(l) :
+							self.clauses.remove(c)
+						else :
+							c.remove(l)
+			except ValueError:
+				print("Ya no tenemos la clausula.")
+
 	def next_varT(self):
 		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
 		for i in range(1, len(self.vars)):
@@ -115,6 +132,7 @@ class Solver():
 			print("\n\n****************************\n")
 			interpretation.show()
 			interpretation.davis_putman()
+			interpretation.simplify()
 			interpretation.show()
 			if interpretation.is_complete():
 				print("isComplete.")

@@ -10,14 +10,14 @@ class Interpretation:
 		self.clauses = clauses
 
 	def next_varT(self):
-		for i, v in enumerate(self.vars[1:]):
-			if v==None:
+		for i in range(1, len(self.vars)):
+			if self.vars[i]==None:
 				self.vars[i]=True
 				return self
 
 	def next_varF(self):
-		for i, v in enumerate(self.vars[1:]):
-			if v==None:
+		for i in range(1, len(self.vars)):
+			if self.vars[i]==None:
 				self.vars[i]=False
 				return self
 	
@@ -61,7 +61,7 @@ class Solver():
 	def solve(self):
 	
 		def rec(interpretation):
-			interpretation.show()
+			#interpretation.show()
 			if interpretation.is_complete():
 				return interpretation.check_if_satisfiable()
 			else:

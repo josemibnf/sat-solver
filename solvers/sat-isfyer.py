@@ -74,6 +74,27 @@ class Interpretation:
 			except ValueError:
 				print("Ya no tenemos la clausula.")
 
+	def check_unit(self):
+		def get_value(c):
+			l = c[0]
+			if l < 0:
+				return self.vars[-1*l]
+			else:
+				return self.vars[l]
+		def put_value(c):
+			l = c[0]
+			if l < 0:
+				self.vars[-1*l] = False
+			else:
+				self.vars[l] = True
+		for c in self.clauses:
+			if len(c)==1:
+				if get_value(c) == None:
+					put_value(c)
+					self.clauses.remove(c)
+				else:
+					return False
+
 	def next_varT(self):
 		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
 		for i in range(1, len(self.vars)):
@@ -134,7 +155,8 @@ class Solver():
 			print("\n\n****************************\n")
 			interpretation.show()
 			interpretation.davis_putman()
-			interpretation.simplify()
+			if interpretation.simplify()==False: return False
+			if interpretation.check_unit()==False: return False
 			interpretation.show()
 			if interpretation.is_complete():
 				print("isComplete.")

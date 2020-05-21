@@ -46,7 +46,6 @@ class Interpretation:
 				return False
 		return True
         
-
 	def show(self):
 		print("-----")
 		print(self.clauses)
@@ -62,6 +61,7 @@ class Solver():
 	def solve(self):
 	
 		def rec(interpretation):
+			interpretation.show()
 			if interpretation.is_complete():
 				return interpretation.check_if_satisfiable()
 			else:

@@ -161,9 +161,10 @@ class Solver():
 			try:
 				interpretation.show()
 				interpretation.davis_putman()
-				maybe_satisfiable = interpretation.simplify()
+				interpretation.simplify()
 				maybe_satisfiable = interpretation.check_unit()
 			except AttributeError:
+				print("AtrtibuteError.")
 				maybe_satisfiable = False
 			if maybe_satisfiable==False:
 				return False

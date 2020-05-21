@@ -22,10 +22,13 @@ class Interpretation:
 				return self
 	
 	def is_complete(self):
-		for v in self.vars:
+		for v in self.vars[1:]:
 			if v == None:
 				return False
 		return True
+
+	def chekc_if_literal_is_satisfiable(self, literal):
+
 
 	def check_if_clause_is_satisfiable(self, clause):
 		for l in clause:

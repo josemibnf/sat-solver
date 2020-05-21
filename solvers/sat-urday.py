@@ -14,7 +14,7 @@ class Interpretation:
 		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
-				nexti.vars = copy.deepcopy(self.vars)
+				nexti.vars = list(self.vars)
 				nexti.vars[i]=True
 				return nexti
 
@@ -22,7 +22,7 @@ class Interpretation:
 		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
-				nexti.vars = copy.deepcopy(self.vars)
+				nexti.vars = list(self.vars)
 				nexti.vars[i]=False
 				return nexti
 	

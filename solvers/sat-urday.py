@@ -28,7 +28,10 @@ class Interpretation:
 		return True
 
 	def check_if_clause_is_satisfiable(self, clause):
-		pass
+		for l in clause:
+			if chekc_if_literal_is_satisfiable(l)==True:
+				return True
+		return False
 
 	def check_if_satisfiable(self):
 		#Si no es completo retornará False

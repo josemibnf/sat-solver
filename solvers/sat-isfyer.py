@@ -69,6 +69,8 @@ class Interpretation:
 							self.clauses.remove(c)
 						else :
 							c.remove(l)
+							if c == []:
+								return False #Como nos queda una clausula vacia, ya sabemos que el cnf en insat.
 			except ValueError:
 				print("Ya no tenemos la clausula.")
 

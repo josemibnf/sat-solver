@@ -2,6 +2,7 @@
 
 import sys
 import os
+import copy
 
 class Interpretation:
 	def __init__(self, n_vars, clauses):
@@ -9,168 +10,70 @@ class Interpretation:
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
 
-	def davis_putman(self):
-		def get_var_clauses(v):
-			print("Obteniendo el var_clauses de la varialbe ",v, "  en ", self.clauses)
-			var_clauses = []
-			for c in self.clauses:
-				print("Vamos a ver la clausula  ", c)
-				for l in c:
-					print(" El literal ...  ",l )
-					if l==v :
-						var_clauses.append((self.clauses.index(c),True)) #Is positive
-						print("         Añado el indice de la clausula ",c, " ----> ",var_clauses," <------")
-					elif -l==v :
-						var_clauses.append((self.clauses.index(c),False)) #Is not positive
-						print("         Añado el indice de la clausula ",c, " ----> ",var_clauses," <------")
-			print("Saco ", var_clauses," de la  variable ",v," de ",self.clauses,"\n")
-			return var_clauses
-		def fusion( v, i1, i2):
-			def s(bool):
-				if bool:
-					return v
-				else:
-					return -v
-			#Toma dos indices de clausulas y las fusiona quitando el literal v, y lo añade.
-			print(" --- Fusion ----")
-			print(" Tenemos las clausulas ",self.clauses,"  y la variable es ", v)
-			print("Elimina de la clausula ",i1[0]," el elemento ",s(i1[1]))
-			self.clauses[i1[0]].remove(s(i1[1]))
-			c1 = self.clauses[i1[0]]
-			print(" Queda tal que asi ",self.clauses)
-			print("Elimina de la clausula ",i2[0]," el elemento ",s(i2[1]))
-			self.clauses[i2[0]].remove(s(i2[1]))
-			c2 = self.clauses[i2[0]]
-			print(" Queda tal que asi ",self.clauses, " he almacenado las clausulas c1: ",c1," y la c2: ",c2)
-			try:
-				self.clauses.remove(c1)
-			except ValueError:
-				pass
-			try:
-				self.clauses.remove(c2)
-			except ValueError:
-				pass
-			print("Nos sacamos las dos clausulas, ", self.clauses)
-			if c1 != [] or c2 != []:
-				self.clauses.append(c1+c2)
-			print("Y al final nos queda .. ",self.clauses)
-		for v in range(1,self.n_vars+1):
-			var_clauses = get_var_clauses(v)
-			while len(var_clauses)>1:
-				contrario = None
-				for c in var_clauses[1:]:
-					if c[1]==True and var_clauses[0][1]==False :
-						contrario = c
-					elif c[1]==False and var_clauses[0][1]==True :
-						contrario = c
-				if contrario==None:
-					print(" Son todas del mismo signo, no hay nada que fusionar. ")
-					break
-				else:
-					fusion( v, var_clauses[0], contrario)
-					var_clauses = get_var_clauses(v)			
-
-	def simplify(self):
-		def value(l):
-			if l < 0:
-				return self.vars[-1*l]
-			else:
-				return self.vars[l]
-		for c in self.clauses:
-			try:
-				for l in c:
-					self.show()
-					if ( value(l) == False and l <0 ) :
-						self.clauses.remove(c)
-					elif ( value(l) == True and l >0 ) :
-						self.clauses.remove(c)
-					elif ( value(l) == True and l <0 ) :
-						c.remove(l)
-					elif ( value(l) == False and l >0 ) :
-						c.remove(l)
-			except ValueError:
-				print("Ya no tenemos la clausula.")
-
-	def check_unit(self):
-		def get_value(c):
-			l = c[0]
-			if l < 0:
-				return self.vars[-1*l]
-			else:
-				return self.vars[l]
-		def put_value(c):
-			l = c[0]
-			if l < 0:
-				self.vars[-1*l] = False
-			else:
-				self.vars[l] = True
-		for c in self.clauses:
-			if len(c)==1:
-				if get_value(c) == None:
-					put_value(c)
-					self.clauses.remove(c)
-				else:
-					print("ESTA INTERPRETACION NO ME VALE")
-					return False
-
-	def cost(self):
-		pass
-
 	def next_varT(self):
-		for i, v in enumerate(self.vars):
-			if v==None:
-				self.vars[i]=True
-				return self
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
+		for i in range(1, len(self.vars)):
+			if self.vars[i]==None:
+				nexti.vars = list(self.vars)
+				nexti.vars[i]=True
+				return nexti
 
 	def next_varF(self):
-		for i, v in enumerate(self.vars):
-			if v==None:
-				self.vars[i]=False
-				return self
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
+		for i in range(1, len(self.vars)):
+			if self.vars[i]==None:
+				nexti.vars = list(self.vars)
+				nexti.vars[i]=False
+				return nexti
 	
 	def is_complete(self):
-		for v in self.vars:
+		for v in self.vars[1:]:
 			if v == None:
 				return False
 		return True
 
+	def chekc_if_literal_is_satisfiable(self, literal):
+		if literal>0:
+			return self.vars[literal]==True
+		else:
+			return self.vars[-literal]==False
+
+	def check_if_clause_is_satisfiable(self, clause):
+		for l in clause:
+			if self.chekc_if_literal_is_satisfiable(l)==True:
+				return True
+		return False
+
 	def check_if_satisfiable(self):
 		#Si no es completo retornará False
-		print(self.clauses)
-		return self.clauses==[]
-
+		for c in self.clauses:
+			if self.check_if_clause_is_satisfiable(c)==False:
+				print("es insatisfactible por la clausula ",c)
+				return False
+		print("bueno pues ya esta, es satisfactible, si.")
+		return True
+        
 	def show(self):
-		print("-----")
+		print("\n-----")
+		print(self)
 		print(self.clauses)
 		print(self.vars)
-		print("-------")
 
 class Solver():
-	"""The class Solver implements an algorithm to solve a given problem instance"""
-
+	
 	def __init__(self, num_vars, clauses):
 		self.clauses = clauses
 		self.num_vars = num_vars
 
 	def solve(self):
-		"""
-		Implements an algorithm to solve the instance of a problem
-		"""
+	
 		def rec(interpretation):
-			maybe_satisfiable = True
-			try:
-				interpretation.show()
-				interpretation.davis_putman()
-				interpretation.simplify()
-				maybe_satisfiable = interpretation.check_unit()
-			except AttributeError:
-				print("AtrtibuteError. Ya hemos quitado todas las clausulas que se cumplian.")
-			if maybe_satisfiable==False:
-				return False
-			elif interpretation.is_complete():
+			interpretation.show()
+			if interpretation.is_complete():
+				print("isComplete.")
 				return interpretation.check_if_satisfiable()
 			else:
-				return rec(interpretation.next_varT()) or rec(interpretation.next_varF())
+				return ( rec(interpretation.next_varT()) or rec(interpretation.next_varF()) )
 		interpretation = Interpretation(self.num_vars, self.clauses)
 		return rec(interpretation)
 

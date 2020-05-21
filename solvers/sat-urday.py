@@ -10,16 +10,20 @@ class Interpretation:
 		self.clauses = clauses
 
 	def next_varT(self):
+		nexti = Interpretation(self.n_vars, self.clauses)
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
-				self.vars[i]=True
-				return self
+				nexti.vars = self.vars
+				nexti.vars[i]=True
+				return nexti
 
 	def next_varF(self):
+		nexti = Interpretation(self.n_vars, self.clauses)
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
-				self.vars[i]=False
-				return self
+				nexti.vars = self.vars
+				nexti.vars[i]=False
+				return nexti
 	
 	def is_complete(self):
 		for v in self.vars[1:]:
@@ -43,14 +47,15 @@ class Interpretation:
 		#Si no es completo retornará False
 		for c in self.clauses:
 			if self.check_if_clause_is_satisfiable(c)==False:
+				print("es insatisfactible por la clausula ",c)
 				return False
+		print("bueno pues ya esta, es satisfactible, si.")
 		return True
         
 	def show(self):
-		print("-----")
+		print("\n-----")
 		print(self.clauses)
 		print(self.vars)
-		print("-------")
 
 class Solver():
 	
@@ -61,8 +66,9 @@ class Solver():
 	def solve(self):
 	
 		def rec(interpretation):
-			#interpretation.show()
+			interpretation.show()
 			if interpretation.is_complete():
+				print("isComplete.")
 				return interpretation.check_if_satisfiable()
 			else:
 				return rec(interpretation.next_varT()) or rec(interpretation.next_varF())

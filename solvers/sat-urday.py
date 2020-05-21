@@ -35,14 +35,14 @@ class Interpretation:
 
 	def check_if_clause_is_satisfiable(self, clause):
 		for l in clause:
-			if chekc_if_literal_is_satisfiable(l)==True:
+			if self.chekc_if_literal_is_satisfiable(l)==True:
 				return True
 		return False
 
 	def check_if_satisfiable(self):
 		#Si no es completo retornará False
 		for c in self.clauses:
-			if check_if_clause_is_satisfiable(c)==False:
+			if self.check_if_clause_is_satisfiable(c)==False:
 				return False
 		return True
         

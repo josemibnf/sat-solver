@@ -54,16 +54,13 @@ class Interpretation:
 		print("-------")
 
 class Solver():
-	"""The class Solver implements an algorithm to solve a given problem instance"""
-
+	
 	def __init__(self, num_vars, clauses):
 		self.clauses = clauses
 		self.num_vars = num_vars
 
 	def solve(self):
-		"""
-		Implements an algorithm to solve the instance of a problem
-		"""
+	
 		def rec(interpretation):
 			if interpretation.is_complete():
 				return interpretation.check_if_satisfiable()

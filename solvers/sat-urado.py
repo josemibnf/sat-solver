@@ -163,6 +163,9 @@ if __name__ == '__main__' :
 	# Create a solver instance with the problem to solve
 	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found
-	print(solver.solve())
+	if solver.solve():
+		sys.stdout.write('\ns SATISFIABLE\nv ')
+	else:
+		sys.stdout.write('\ns UNSATISFIABLE\nv ')
 	# Show the best solution found
 	#best_sol.show()

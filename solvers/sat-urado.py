@@ -10,10 +10,11 @@ import copy
 # Usa simplify, y check_out.
 
 class Interpretation:
-	def __init__(self, n_vars, clauses):
+	def __init__(self, n_vars, clauses, best):
 		self.n_vars = n_vars
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
+		self.best = best  #Puntero para guardar la mejor interpretacion del sover.
 
 	def simplify(self):
 		def has_value(l):
@@ -58,7 +59,7 @@ class Interpretation:
 					return False # Si no se cumple esa clausula, ya sabemos que el cnf es insat.
 
 	def next_varT(self):
-		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses), self.best)
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
 				nexti.vars = list(self.vars)
@@ -66,7 +67,7 @@ class Interpretation:
 				return nexti
 
 	def next_varF(self):
-		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses), self.best)
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
 				nexti.vars = list(self.vars)
@@ -98,6 +99,7 @@ class Interpretation:
 				print("es insatisfactible por la clausula ",c)
 				return False
 		print("bueno pues ya esta, es satisfactible, si.")
+		self.best = self
 		return True
         
 	def show(self):
@@ -107,10 +109,11 @@ class Interpretation:
 		print(self.vars)
 
 class Solver():
-	
+
 	def __init__(self, num_vars, clauses):
 		self.clauses = clauses
 		self.num_vars = num_vars
+		self.best = None
 
 	def solve(self):
 		def rec(interpretation):
@@ -126,7 +129,7 @@ class Solver():
 				return interpretation.check_if_satisfiable()
 			else:
 				return ( rec(interpretation.next_varT()) or rec(interpretation.next_varF()) )
-		interpretation = Interpretation(self.num_vars, self.clauses)
+		interpretation = Interpretation(self.num_vars, self.clauses, self.best)
 		return rec(interpretation)
 
 def parse(file):
@@ -164,8 +167,11 @@ if __name__ == '__main__' :
 	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found
 	if solver.solve():
-		sys.stdout.write('\ns SATISFIABLE\nv ')
+		sys.stdout.write('\nc SAT-URADO\n ')
+		sys.stdout.write('\ns SATISFIABLE\n ')
+		sys.stdout.write('\nv ', solver.best.vars)
 	else:
-		sys.stdout.write('\ns UNSATISFIABLE\nv ')
+		sys.stdout.write('\nc SAT-URADO\n ')
+		sys.stdout.write('\ns UNSATISFIABLE\n ')
 	# Show the best solution found
 	#best_sol.show()

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #!/usr/bin/python
 
 import sys
@@ -11,10 +10,11 @@ import copy
 # Usa, DP, simplify, y check_out.
 
 class Interpretation:
-	def __init__(self, n_vars, clauses):
+	def __init__(self, n_vars, clauses, best):
 		self.n_vars = n_vars
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
+		self.best = best
 
 	def davis_putman(self):
 		def get_var_clauses(v):
@@ -105,7 +105,7 @@ class Interpretation:
 					return False # Si no se cumple esa clausula, ya sabemos que el cnf es insat.
 
 	def next_varT(self):
-		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses), self.best)
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
 				nexti.vars = list(self.vars)
@@ -113,7 +113,7 @@ class Interpretation:
 				return nexti
 
 	def next_varF(self):
-		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses))
+		nexti = Interpretation(self.n_vars, copy.deepcopy(self.clauses), self.best)
 		for i in range(1, len(self.vars)):
 			if self.vars[i]==None:
 				nexti.vars = list(self.vars)
@@ -145,6 +145,7 @@ class Interpretation:
 				print("es insatisfactible por la clausula ",c)
 				return False
 		print("bueno pues ya esta, es satisfactible, si.")
+		self.best.set_list(self.vars)
 		return True
         
 	def show(self):
@@ -153,11 +154,27 @@ class Interpretation:
 		print(self.clauses)
 		print(self.vars)
 
+class Best:
+	def __init__(self):
+	 super().__init__()
+	 self.list = []
+	def set_list(self, vars):
+		l=['v']
+		for i in range(1,len(vars)):
+			if vars[i]==True:
+				l.append(i)
+			else:
+				l.append(-1)
+		l.append(0)
+		self.list = l
+	def get_list(self):
+		return ' '.join([str(elem) for elem in self.list])
 class Solver():
 	
 	def __init__(self, num_vars, clauses):
 		self.clauses = clauses
 		self.num_vars = num_vars
+		self.best = Best()
 
 	def solve(self):
 		def rec(interpretation):
@@ -175,7 +192,7 @@ class Solver():
 				return interpretation.check_if_satisfiable()
 			else:
 				return ( rec(interpretation.next_varT()) or rec(interpretation.next_varF()) )
-		interpretation = Interpretation(self.num_vars, self.clauses)
+		interpretation = Interpretation(self.num_vars, self.clauses, self.best)
 		return rec(interpretation)
 
 def parse(file):
@@ -212,5 +229,15 @@ if __name__ == '__main__' :
 	# Create a solver instance with the problem to solve
 	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found
-	print(solver.solve())
-	# Show the best solution found
+	if solver.solve():
+		sys.stdout.write('\n')
+		sys.stdout.write('c SAT-URADO\n')
+		sys.stdout.write('s SATISFIABLE\n')
+		sys.stdout.write(solver.best.get_list())
+		sys.stdout.write('\n')
+
+	else:
+		sys.stdout.write('\n')
+		sys.stdout.write('c SAT-URADO\n')
+		sys.stdout.write('s UNSATISFIABLE')
+		sys.stdout.write('\n')

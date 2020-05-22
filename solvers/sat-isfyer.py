@@ -164,7 +164,7 @@ class Best:
 			if vars[i]==True:
 				l.append(i)
 			else:
-				l.append(-1)
+				l.append(-i)
 		l.append(0)
 		self.list = l
 	def get_list(self):

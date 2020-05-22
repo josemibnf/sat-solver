@@ -14,7 +14,7 @@ class Interpretation:
 		self.n_vars = n_vars
 		self.vars = [None]*(self.n_vars+1)
 		self.clauses = clauses
-		self.best = best  #Puntero para guardar la mejor interpretacion del sover.
+		self.best = best  #Puntero para guardar la mejor interpretacion del sover (solo var list).
 
 	def simplify(self):
 		def has_value(l):
@@ -99,7 +99,7 @@ class Interpretation:
 				print("es insatisfactible por la clausula ",c)
 				return False
 		print("bueno pues ya esta, es satisfactible, si.")
-		self.best = self
+		self.best.list = self.vars
 		return True
         
 	def show(self):
@@ -108,12 +108,16 @@ class Interpretation:
 		print(self.clauses)
 		print(self.vars)
 
+class Best:
+	def __init__(self):
+	 super().__init__()
+	 self.list = []
 class Solver():
 
 	def __init__(self, num_vars, clauses):
 		self.clauses = clauses
 		self.num_vars = num_vars
-		self.best = None
+		self.best = Best()
 
 	def solve(self):
 		def rec(interpretation):
@@ -169,7 +173,7 @@ if __name__ == '__main__' :
 	if solver.solve():
 		sys.stdout.write('\nc SAT-URADO\n ')
 		sys.stdout.write('\ns SATISFIABLE\n ')
-		sys.stdout.write('\nv ', solver.best.vars)
+		sys.stdout.write('\nv ', solver.best.list)
 	else:
 		sys.stdout.write('\nc SAT-URADO\n ')
 		sys.stdout.write('\ns UNSATISFIABLE\n ')

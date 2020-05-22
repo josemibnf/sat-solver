@@ -99,7 +99,7 @@ class Interpretation:
 				print("es insatisfactible por la clausula ",c)
 				return False
 		print("bueno pues ya esta, es satisfactible, si.")
-		self.best.list = self.vars
+		self.best.set_list(self.vars)
 		return True
         
 	def show(self):
@@ -112,6 +112,17 @@ class Best:
 	def __init__(self):
 	 super().__init__()
 	 self.list = []
+	def set_list(self, vars):
+		l=['v']
+		for i in range(1,len(vars)):
+			if vars[i]==True:
+				l.append(i)
+			else:
+				l.append(-1)
+		l.append(0)
+		self.list = l
+	def get_list(self):
+		return ' '.join([str(elem) for elem in self.list])
 class Solver():
 
 	def __init__(self, num_vars, clauses):
@@ -171,11 +182,14 @@ if __name__ == '__main__' :
 	solver = Solver(num_vars, clauses)
 	# Solve the problem and get the best solution found
 	if solver.solve():
-		sys.stdout.write('\nc SAT-URADO\n ')
-		sys.stdout.write('\ns SATISFIABLE\n ')
-		sys.stdout.write('\nv ', solver.best.list)
+		sys.stdout.write('\n')
+		sys.stdout.write('c SAT-URADO\n')
+		sys.stdout.write('s SATISFIABLE\n')
+		sys.stdout.write(solver.best.get_list())
+		sys.stdout.write('\n')
+
 	else:
-		sys.stdout.write('\nc SAT-URADO\n ')
-		sys.stdout.write('\ns UNSATISFIABLE\n ')
-	# Show the best solution found
-	#best_sol.show()
+		sys.stdout.write('\n')
+		sys.stdout.write('c SAT-URADO\n')
+		sys.stdout.write('s UNSATISFIABLE')
+		sys.stdout.write('\n')
